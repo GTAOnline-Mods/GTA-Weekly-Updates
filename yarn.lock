@@ -1971,6 +1971,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/snoowrap@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@types/snoowrap/-/snoowrap-1.19.0.tgz#2485f0437a65275028e58b99c90d409af13df447"
+  integrity sha512-zjzW/7BrgNi9w2lfByvlPaFz+c89HeVouWoxilpRJuDU2MNsTRW5aRDc/8Dgfn1CrFYX+7iN18+bSsw/lBiHCQ==
+  dependencies:
+    snoowrap "*"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -10449,7 +10456,7 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-snoowrap@^1.21.0:
+snoowrap@*, snoowrap@^1.21.0:
   version "1.21.0"
   resolved "https://registry.yarnpkg.com/snoowrap/-/snoowrap-1.21.0.tgz#559d30a11152860d3a4322f113963308c62df969"
   integrity sha512-vSQlfm0ikek6mezBhTGtYw0vk4hdpgIrtm2o4kZPDzg0HVs4b/Kw7COEfD8TujQP0zzp9EGSwa1rkHufBrwkEw==
