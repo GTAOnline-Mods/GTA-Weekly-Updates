@@ -1,5 +1,8 @@
 {
-  "name": "temp",
+  "name": "bryony-bot",
+  "description": "/r/GTAOnline Weekly Update Bot",
+  "license": "GNU GPL v3",
+  "author": "Dan6erbond & CausticPenguino",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
