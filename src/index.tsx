@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 import Firebase, { FirebaseContext } from "./firebase";
-import "./index.css";
+import "./index.scss";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
