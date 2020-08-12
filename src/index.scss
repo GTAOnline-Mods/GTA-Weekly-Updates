@@ -1,13 +1,43 @@
+@import "~bootstrap/scss/bootstrap";
+
+@font-face {
+  font-family: "Pricedown";
+  src: url("./fonts/pricedown bl.ttf");
+  font-style: normal;
+  font-weight: 400;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #cfe5ce;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.container-fluid {
+  padding: 25px;
+}
+
+.navbar-dark {
+  background-color: #666666 !important;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-family: "Pricedown";
+  text-shadow: -0.2rem 0 white, 0 0.2rem white, 0.2rem 0 white, 0 -0.2rem white;
+}
+
+.navbar-brand {
+  font-family: "Pricedown";
+  color: black !important;
+  text-shadow: -0.05rem 0 white, 0 0.05rem white, 0.05rem 0 white, 0 -0.05rem white;
 }
