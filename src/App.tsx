@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { compose } from "recompose";
-import Firebase, { withFirebase } from "./firebase";
+import Firebase, { withFirebase } from "./Firebase";
 
 interface AppProps extends RouteComponentProps<{}> {
   firebase?: Firebase;
