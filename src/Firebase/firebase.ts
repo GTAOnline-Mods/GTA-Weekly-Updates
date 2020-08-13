@@ -1,6 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAuQm6JQ5NtDuPcxcOskE9TieIWgeNVTr8",
@@ -16,12 +17,14 @@ const firebaseConfig = {
 class Firebase {
   auth: app.auth.Auth;
   db: app.database.Database;
+  functions: app.functions.Functions;
 
   constructor() {
     app.initializeApp(firebaseConfig);
 
     this.auth = app.auth();
     this.db = app.database();
+    this.functions = app.functions();
   }
 
   doCreateUserWithEmailAndPassword = (email: string, password: string) =>
