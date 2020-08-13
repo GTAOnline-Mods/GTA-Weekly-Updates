@@ -1,6 +1,6 @@
 {
-  "name": "bryony-bot",
-  "description": "/r/GTAOnline Weekly Update Bot",
+  "name": "gta-weekly-updates",
+  "description": "Web app for official GTA Online tunable updates hosted by /r/GTAOnline.",
   "license": "GNU GPL v3",
   "author": "Dan6erbond & CausticPenguino",
   "version": "0.1.0",
