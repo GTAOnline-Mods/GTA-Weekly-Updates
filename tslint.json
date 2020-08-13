@@ -12,15 +12,9 @@
       "members",
       "elements"
     ],
-    "export-name": [
-      true,
-      {
-        "ignore-case": true
-      }
-    ],
     "max-line-length": [
       true,
-      80
+      120
     ],
     "no-any": false,
     "no-submodule-imports": false,
@@ -36,15 +30,9 @@
         "@utils"
       ]
     ],
-    "no-import-side-effect": [
-      true,
-      {
-        "ignore-module": "(\\.css)$"
-      }
-    ],
+    "no-import-side-effect": false,
     "no-increment-decrement": [
       "allow-for-loops"
-    ],
-    "rulesDirectory": []
+    ]
   }
 }
