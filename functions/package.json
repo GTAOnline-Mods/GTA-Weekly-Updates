@@ -1,6 +1,9 @@
 {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
+  "version": "0.1.0",
+  "author": "Dan6erbond & CausticPenguino",
+  "license": "GNU GPL v3",
   "scripts": {
     "lint": "eslint .",
     "serve": "firebase emulators:start --only functions",
@@ -10,16 +13,17 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "10"
+    "node": "8"
   },
   "main": "index.js",
   "dependencies": {
     "firebase-admin": "^8.10.0",
-    "firebase-functions": "^3.6.1"
+    "firebase-functions": "^3.6.1",
+    "snoowrap": "^1.21.0"
   },
   "devDependencies": {
     "eslint": "^5.12.0",
-    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-promise": "^4.2.1",
     "firebase-functions-test": "^0.2.0"
   },
   "private": true
