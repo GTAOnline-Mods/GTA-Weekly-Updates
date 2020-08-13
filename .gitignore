@@ -68,3 +68,4 @@ node_modules/
 # Custom
 src/helpers/config.ts
 src/Reddit/index.ts
+functions/reddit.js
