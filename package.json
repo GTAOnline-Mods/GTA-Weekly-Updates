@@ -1,7 +1,7 @@
 {
   "name": "gta-weekly-updates",
   "description": "Web app for official GTA Online tunable updates hosted by /r/GTAOnline.",
-  "license": "GNU GPL v3",
+  "license": "GPL-3.0-only",
   "author": "Dan6erbond & CausticPenguino",
   "version": "0.1.0",
   "private": true,
