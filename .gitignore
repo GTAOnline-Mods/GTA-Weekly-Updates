@@ -65,6 +65,9 @@ node_modules/
 # dotenv environment variables file
 .env
 
+# Build output folder
+build/
+
 # IDE files
 .vscode/
 
