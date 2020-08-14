@@ -1,6 +1,6 @@
 import app from "firebase/app";
 import "firebase/auth";
-import "firebase/database";
+import "firebase/firestore";
 import "firebase/functions";
 
 const firebaseConfig = {
@@ -16,14 +16,14 @@ const firebaseConfig = {
 
 class Firebase {
   auth: app.auth.Auth;
-  db: app.database.Database;
+  db: app.firestore.Firestore;
   functions: app.functions.Functions;
 
   constructor() {
     app.initializeApp(firebaseConfig);
 
     this.auth = app.auth();
-    this.db = app.database();
+    this.db = app.firestore();
     this.functions = app.functions();
   }
 
