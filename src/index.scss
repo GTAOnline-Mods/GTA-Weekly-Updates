@@ -14,7 +14,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #cfe5ce;
 }
 
 code {
@@ -26,8 +25,18 @@ code {
   padding: 25px;
 }
 
+.yellow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20vh;
+  background-color: #F99C1C;
+  z-index: -100;
+}
+
 .navbar-dark {
-  background-color: #666666 !important;
+  background-color: black !important;
 }
 
 h1 {
