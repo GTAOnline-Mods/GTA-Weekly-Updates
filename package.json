@@ -16,7 +16,6 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/recompose": "^0.30.7",
-    "@types/snoowrap": "^1.19.0",
     "bootstrap": "^4.5.2",
     "firebase": "^7.17.2",
     "node-sass": "^4.14.1",
@@ -27,7 +26,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.2",
     "recompose": "^0.30.0",
-    "snoowrap": "^1.21.0",
     "typescript": "^3.9.7"
   },
   "scripts": {
