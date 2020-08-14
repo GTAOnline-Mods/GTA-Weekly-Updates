@@ -1,17 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { Card, CardDeck } from "react-bootstrap";
-import { RouteComponentProps, withRouter } from "react-router";
-import { compose } from "recompose";
 import Firebase, { withFirebase } from "../../Firebase";
 import Update, { SaleItem, UpdateItem } from "../../models/update";
 import UpdateItemElement from "./UpdateItemElement";
 
-interface UpdatesProps extends RouteComponentProps<{}> {
+interface UpdatesProps {
   firebase?: Firebase;
 }
 
-function Updates({ firebase, history, location, match }: UpdatesProps) {
+function Updates({ firebase }: UpdatesProps) {
   const [updates, setUpdates] = React.useState<Update[]>([]);
 
   React.useEffect(() => {
@@ -107,4 +105,4 @@ function Updates({ firebase, history, location, match }: UpdatesProps) {
   );
 }
 
-export default compose(withRouter, withFirebase)(Updates as any);
+export default withFirebase(Updates);
