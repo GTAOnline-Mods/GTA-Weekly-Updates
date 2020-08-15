@@ -1,38 +1,20 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended", "tslint-microsoft-contrib/recommended"],
   "jsRules": {},
+  "rulesDirectory": ["node_modules/tslint-microsoft-contrib"],
   "rules": {
     "no-console": false,
-    "align": [
-      true,
-      "statements",
-      "members",
-      "elements"
-    ],
-    "max-line-length": [
-      true,
-      120
-    ],
+    "align": [true, "statements", "members", "elements"],
+    "max-line-length": [true, 120],
     "no-any": false,
     "no-submodule-imports": false,
     "no-implicit-dependencies": [
       true,
       "dev",
-      [
-        "@",
-        "@public",
-        "@main",
-        "@models",
-        "@renderer",
-        "@utils"
-      ]
+      ["@", "@public", "@main", "@models", "@renderer", "@utils"]
     ],
     "no-import-side-effect": false,
-    "no-increment-decrement": [
-      "allow-for-loops"
-    ]
+    "no-increment-decrement": ["allow-for-loops"]
   }
 }
