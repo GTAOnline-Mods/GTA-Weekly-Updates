@@ -1,17 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
 import App from "./App";
 import Firebase, { FirebaseContext } from "./Firebase";
 import "./index.scss";
 import * as serviceWorker from "./serviceWorker";
+import { rootReducer } from "./store";
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
-  <Router>
-    <FirebaseContext.Provider value={new Firebase()}>
-      <App />
-    </FirebaseContext.Provider>
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+      </FirebaseContext.Provider>
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 

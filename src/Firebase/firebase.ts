@@ -2,6 +2,7 @@ import app from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/functions";
+import Update from "../models/update";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAuQm6JQ5NtDuPcxcOskE9TieIWgeNVTr8",
@@ -27,18 +28,72 @@ class Firebase {
     this.functions = app.functions();
   }
 
-  doCreateUserWithEmailAndPassword = (email: string, password: string) =>
-    this.auth.createUserWithEmailAndPassword(email, password);
+  createUserWithEmailAndPassword = (email: string, password: string) =>
+    this.auth.createUserWithEmailAndPassword(email, password).catch((error) => {
+      throw error;
+    });
 
-  doSignInWithEmailAndPassword = (email: string, password: string) =>
-    this.auth.signInWithEmailAndPassword(email, password);
+  signInWithEmailAndPassword = (email: string, password: string) =>
+    this.auth.signInWithEmailAndPassword(email, password).catch((error) => {
+      console.error(error);
+    });
 
-  doSignOut = () => this.auth.signOut();
+  signOut = () =>
+    this.auth.signOut().catch((error) => {
+      console.error(error);
+    });
 
-  doPasswordReset = (email: string) => this.auth.sendPasswordResetEmail(email);
+  resetPassword = (email: string) =>
+    this.auth.sendPasswordResetEmail(email).catch((error) => {
+      console.error(error);
+    });
 
-  doPasswordUpdate = (password: string) =>
-    this.auth.currentUser?.updatePassword(password);
+  updatePassword = (password: string) =>
+    this.auth.currentUser?.updatePassword(password).catch((error) => {
+      console.error(error);
+    });
+
+  getUpdates = async () => {
+    const snapshot = await this.db.collection("updates").get();
+
+    const getItem = async (item: app.firestore.DocumentReference) => {
+      const s = await item.get();
+      return {
+        name: s.data()!.name,
+        docRef: item,
+        id: item.id,
+        data: s.data()!,
+      };
+    };
+
+    const getItems = async (items?: app.firestore.DocumentData[]) =>
+      items ? Promise.all(items.map((item) => getItem(item.item))) : [];
+
+    const getSales = async (sale?: app.firestore.DocumentData[]) =>
+      sale
+        ? Promise.all(
+            sale.map(async (item) => ({
+              ...(await getItem(item.item)),
+              amount: item.amount,
+            }))
+          )
+        : [];
+
+    const u: Update[] = [];
+
+    for (const doc of snapshot!.docs) {
+      const update = {
+        podium: doc.data()!.podium && (await getItem(doc.data()!.podium)),
+        new: await getItems(doc.data()!.new),
+        sale: await getSales(doc.data()!.sale),
+        twitchPrime: await getSales(doc.data()!.twitchPrime),
+        date: new Date(doc.data()!.date.seconds * 1000),
+      };
+      u.push(update);
+    }
+
+    return u;
+  };
 }
 
 export default Firebase;

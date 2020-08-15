@@ -1,60 +1,32 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+// eslint-disable react-hooks/exhaustive-deps
 import React from "react";
 import { Card, CardDeck } from "react-bootstrap";
+import { connect, useDispatch } from "react-redux";
+import { compose } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
 import Update, { SaleItem, UpdateItem } from "../../models/update";
+import { RootState } from "../../store";
+import { setUpdates } from "../../store/Updates";
 import UpdateItemElement from "./UpdateItemElement";
 
 interface UpdatesProps {
   firebase?: Firebase;
+  updates: Update[];
+  setUpdates: typeof setUpdates;
 }
 
-function Updates({ firebase }: UpdatesProps) {
-  const [updates, setUpdates] = React.useState<Update[]>([]);
+const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
-    async function fetchUpdates() {
-      const snapshot = await firebase?.db.collection("updates").get();
-
-      const getItem = async (item: firebase.firestore.DocumentReference) => {
-        const s = await item.get();
-        return {
-          name: s.data()!.name,
-          docRef: item,
-          id: item.id,
-          data: s.data()!,
-        };
-      };
-
-      const getItems = async (items?: firebase.firestore.DocumentData[]) =>
-        items ? Promise.all(items.map((item) => getItem(item.item))) : [];
-
-      const getSales = async (sale?: firebase.firestore.DocumentData[]) =>
-        sale
-          ? Promise.all(
-              sale.map(async (item) => ({
-                ...(await getItem(item.item)),
-                amount: item.amount,
-              }))
-            )
-          : [];
-
-      const u: Update[] = [];
-
-      for (const doc of snapshot!.docs) {
-        const update = {
-          podium: doc.data()!.podium && (await getItem(doc.data()!.podium)),
-          new: await getItems(doc.data()!.new),
-          sale: await getSales(doc.data()!.sale),
-          twitchPrime: await getSales(doc.data()!.twitchPrime),
-          date: new Date(doc.data()!.date.seconds * 1000),
-        };
-        u.push(update);
-      }
-
-      setUpdates(u);
+    async function getUpdates() {
+      const u = await firebase!.getUpdates();
+      dispatch(setUpdates(u));
     }
-    fetchUpdates();
+    if (!updates || updates.length === 0) {
+      getUpdates();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -103,6 +75,16 @@ function Updates({ firebase }: UpdatesProps) {
       ))}
     </CardDeck>
   );
-}
+};
 
-export default withFirebase(Updates);
+const mapStateToProps = (state: RootState) => ({
+  updates: state.updates.updates,
+});
+
+const mapDispatchToProps = { setUpdates };
+
+// tslint:disable-next-line: export-name
+export default compose(
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
+)(Updates) as any;

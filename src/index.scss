@@ -1,3 +1,7 @@
+$theme-colors: (
+  "success": #cfe2ce,
+);
+
 @import "~bootstrap/scss/bootstrap";
 
 @font-face {
@@ -31,7 +35,7 @@ code {
   left: 0;
   right: 0;
   height: 20vh;
-  background-color: #F99C1C;
+  background-color: #f99c1c;
   z-index: -100;
 }
 
@@ -48,5 +52,6 @@ h1 {
 .navbar-brand {
   font-family: "Pricedown";
   color: black !important;
-  text-shadow: -0.05rem 0 white, 0 0.05rem white, 0.05rem 0 white, 0 -0.05rem white;
+  text-shadow: -0.05rem 0 white, 0 0.05rem white, 0.05rem 0 white,
+    0 -0.05rem white;
 }
