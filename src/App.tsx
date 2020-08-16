@@ -2,21 +2,30 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
 import { Route, Switch } from "react-router";
-import { compose } from "redux";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Header from "./components/Header";
 import Updates from "./components/Updates";
 import Firebase, { withFirebase } from "./Firebase";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
+import { RootState } from "./store";
+import { loadFaqThread } from "./store/Reddit";
 import { setLoggedIn } from "./store/User";
 
 interface AppProps {
   firebase?: Firebase;
   setLoggedIn: typeof setLoggedIn;
+  faqThread?: string;
+  loadFaqThread: typeof loadFaqThread;
 }
 
-function App({ firebase, setLoggedIn }: AppProps) {
+function App({ firebase, setLoggedIn, faqThread, loadFaqThread }: AppProps) {
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    loadFaqThread();
+  }, []);
+
   if (firebase?.auth.currentUser !== null) {
     dispatch(setLoggedIn(true));
   }
@@ -28,6 +37,15 @@ function App({ firebase, setLoggedIn }: AppProps) {
       <Switch>
         <Route path="/login" component={LogIn} />
         <Route path="/sign-up" component={SignUp} />
+        <Route
+          path="/weekly-faq"
+          component={() => {
+            if (faqThread) {
+              window.location.href = faqThread;
+            }
+            return <h1 className="p-4">Redirecting...</h1>;
+          }}
+        />
         <Route path="/" exact>
           <Container fluid>
             <Updates />
@@ -44,9 +62,20 @@ function App({ firebase, setLoggedIn }: AppProps) {
   );
 }
 
-const mapDispatchToProps = { setLoggedIn };
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setLoggedIn,
+      loadFaqThread,
+    },
+    dispatch
+  );
+
+const mapStateToProps = (state: RootState) => ({
+  faqThread: state.reddit.faqThread,
+});
 
 export default compose(
   withFirebase,
-  connect(null, mapDispatchToProps)
+  connect(mapStateToProps, mapDispatchToProps)
 )(App) as any;
