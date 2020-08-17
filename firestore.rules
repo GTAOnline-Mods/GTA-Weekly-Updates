@@ -7,8 +7,11 @@ service cloud.firestore {
     match /configs/{config} {
       allow read: if userIsAdmin();
     }
+    match /users/{user} {
+      allow read: if user == request.auth.uid;
+    }
     match /{collection}/{document} {
-      allow read: if collection != "configs";
+      allow read: if collection != "configs" && collection != "users";
       allow write: if userIsAdmin();
     }
   }
