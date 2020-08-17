@@ -4,21 +4,33 @@ import { connect, useDispatch } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router";
 import { compose } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
-import { setLoggedIn } from "../store/User";
+import { RootState } from "../store";
+import { setIsAdmin, setLoggedIn, setRedirectUrl } from "../store/User";
 
 interface LogInProps extends RouteComponentProps<{}> {
   firebase?: Firebase;
   setLoggedIn: typeof setLoggedIn;
+  setIsAdmin: typeof setIsAdmin;
+  redirectUrl?: string;
+  setRedirectUrl: typeof setRedirectUrl;
 }
 
-const LogIn = ({ firebase, history, setLoggedIn }: LogInProps) => {
+const LogIn = ({
+  firebase,
+  history,
+  setLoggedIn,
+  setIsAdmin,
+  redirectUrl,
+  setRedirectUrl,
+}: LogInProps) => {
   const dispatch = useDispatch();
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const logIn = (event: React.FormEvent<HTMLFormElement>) => {
+  const logIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // tslint:disable-next-line: possible-timing-attack
     if (email === "" || password === "") {
       return;
     }
@@ -27,9 +39,18 @@ const LogIn = ({ firebase, history, setLoggedIn }: LogInProps) => {
     } catch (error) {
       console.error(error);
     } finally {
-      dispatch(setLoggedIn(true));
       if (firebase?.auth.currentUser !== null) {
-        history.push("/");
+        dispatch(setLoggedIn(true));
+        const snapshot = await firebase?.db
+          .collection("users")
+          .doc(firebase?.auth.currentUser.uid)
+          .get();
+        if (snapshot?.exists && snapshot.data()?.admin) {
+          dispatch(setIsAdmin(true));
+        }
+        const ru = redirectUrl || "/";
+        dispatch(setRedirectUrl());
+        history.push(ru);
       }
     }
   };
@@ -37,7 +58,7 @@ const LogIn = ({ firebase, history, setLoggedIn }: LogInProps) => {
   return (
     <Container fluid>
       <h1>Login</h1>
-      <div style={{ height: "7vh" }} />
+      <div style={{ height: "6rem" }} />
       <Form noValidate validated onSubmit={logIn}>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
@@ -72,10 +93,14 @@ const LogIn = ({ firebase, history, setLoggedIn }: LogInProps) => {
   );
 };
 
-const mapDispatchToProps = { setLoggedIn };
+const mapStateToProps = (state: RootState) => ({
+  redirectUrl: state.user.redirectUrl,
+});
+
+const mapDispatchToProps = { setLoggedIn, setRedirectUrl, setIsAdmin };
 
 export default compose(
   withFirebase,
   withRouter,
-  connect(null, mapDispatchToProps)
+  connect(mapStateToProps, mapDispatchToProps)
 )(LogIn) as any;

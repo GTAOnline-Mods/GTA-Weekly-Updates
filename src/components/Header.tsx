@@ -5,27 +5,40 @@ import { Link } from "react-router-dom";
 import { compose } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { RootState } from "../store";
-import { setLoggedIn } from "../store/User";
+import { setIsAdmin, setLoggedIn } from "../store/User";
 
 interface HeaderProps {
   firebase?: Firebase;
   loggedIn: boolean;
+  isAdmin: boolean;
   setLoggedIn: typeof setLoggedIn;
+  setIsAdmin: typeof setIsAdmin;
 }
 
-function Header({ firebase, loggedIn, setLoggedIn }: HeaderProps) {
+function Header({
+  firebase,
+  loggedIn,
+  setLoggedIn,
+  setIsAdmin,
+  isAdmin,
+}: HeaderProps) {
   const dispatch = useDispatch();
 
   const signOut = () => {
-    firebase?.signOut();
-    dispatch(setLoggedIn(false));
+    try {
+      firebase?.signOut();
+      dispatch(setLoggedIn(false));
+      dispatch(setIsAdmin(false));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Navbar.Brand as={Link} to="/">
         <img
-          alt=""
+          alt="GTAOnline Weekly Updates"
           src="res/img/community_icon.png"
           width="30"
           height="30"
@@ -38,6 +51,11 @@ function Header({ firebase, loggedIn, setLoggedIn }: HeaderProps) {
         <Nav className="mr-auto"></Nav>
         {loggedIn ? (
           <Nav>
+            {isAdmin && (
+              <Nav.Link as={Link} to="admin">
+                Admin
+              </Nav.Link>
+            )}
             <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
           </Nav>
         ) : (
@@ -57,9 +75,10 @@ function Header({ firebase, loggedIn, setLoggedIn }: HeaderProps) {
 
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.user.loggedIn,
+  isAdmin: state.user.isAdmin,
 });
 
-const mapDispatchToProps = { setLoggedIn };
+const mapDispatchToProps = { setLoggedIn, setIsAdmin };
 
 export default compose(
   withFirebase,

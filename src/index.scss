@@ -34,7 +34,7 @@ code {
   top: 0;
   left: 0;
   right: 0;
-  height: 20vh;
+  height: 14rem;
   background-color: #f99c1c;
   z-index: -100;
 }
@@ -43,9 +43,13 @@ code {
   background-color: black !important;
 }
 
-h1 {
-  font-size: 3.5rem;
+.pricedown {
   font-family: "Pricedown";
+}
+
+h1 {
+  @extend .pricedown;
+  font-size: 3.5rem;
   text-shadow: -0.2rem 0 white, 0 0.2rem white, 0.2rem 0 white, 0 -0.2rem white;
 }
 

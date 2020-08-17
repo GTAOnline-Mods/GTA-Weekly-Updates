@@ -3,40 +3,76 @@ import { Container } from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
 import { Route, Switch } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
+import Admin from "./admin";
 import Header from "./components/Header";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Updates from "./components/Updates";
 import Firebase, { withFirebase } from "./Firebase";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import { RootState } from "./store";
 import { loadFaqThread } from "./store/Reddit";
-import { setLoggedIn } from "./store/User";
+import { setIsAdmin, setLoggedIn, setRedirectUrl } from "./store/User";
 
 interface AppProps {
   firebase?: Firebase;
   setLoggedIn: typeof setLoggedIn;
   faqThread?: string;
   loadFaqThread: typeof loadFaqThread;
+  isAdmin: boolean;
+  setIsAdmin: typeof setIsAdmin;
+  setRedirectUrl: (path?: string) => void;
 }
 
-function App({ firebase, setLoggedIn, faqThread, loadFaqThread }: AppProps) {
+function App({
+  firebase,
+  setLoggedIn,
+  faqThread,
+  loadFaqThread,
+  isAdmin,
+  setRedirectUrl,
+}: AppProps) {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     loadFaqThread();
-  }, []);
 
-  if (firebase?.auth.currentUser !== null) {
-    dispatch(setLoggedIn(true));
-  }
+    const checkUser = async () => {
+      if (firebase?.auth.currentUser !== null) {
+        dispatch(setLoggedIn(true));
+
+        const snapshot = await firebase?.db
+          .collection("users")
+          .doc(firebase?.auth.currentUser.uid)
+          .get();
+        if (snapshot?.exists && snapshot.data()?.admin) {
+          dispatch(setIsAdmin(true));
+        }
+      }
+    };
+
+    checkUser();
+  }, []);
 
   return (
     <React.Fragment>
       <Header />
       <div className="yellow-overlay" />
       <Switch>
+        <Route path="/" exact>
+          <Container fluid>
+            <Updates />
+          </Container>
+        </Route>
         <Route path="/login" component={LogIn} />
         <Route path="/sign-up" component={SignUp} />
+        <ProtectedRoute
+          path="/admin"
+          isAuthenticated={isAdmin}
+          component={Admin}
+          authenticationPath="/login"
+          setRedirectUrl={(path) => dispatch(setRedirectUrl(path))}
+        />
         <Route
           path="/weekly-faq"
           component={() => {
@@ -46,15 +82,10 @@ function App({ firebase, setLoggedIn, faqThread, loadFaqThread }: AppProps) {
             return <h1 className="p-4">Redirecting...</h1>;
           }}
         />
-        <Route path="/" exact>
-          <Container fluid>
-            <Updates />
-          </Container>
-        </Route>
         <Route path="*">
           <Container fluid>
             <h1>404</h1>
-            <h3>Page not found.</h3>
+            <h2 className="pricedown">Page not found.</h2>
           </Container>
         </Route>
       </Switch>
@@ -67,12 +98,15 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
     {
       setLoggedIn,
       loadFaqThread,
+      setIsAdmin,
+      setRedirectUrl,
     },
     dispatch
   );
 
 const mapStateToProps = (state: RootState) => ({
   faqThread: state.reddit.faqThread,
+  isAdmin: state.user.isAdmin,
 });
 
 export default compose(
