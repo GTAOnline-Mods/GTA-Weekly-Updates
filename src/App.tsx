@@ -12,6 +12,7 @@ import Updates from "./components/Updates";
 import Firebase, { withFirebase } from "./Firebase";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
+import VehicleView from "./pages/VehicleView";
 import { RootState } from "./store";
 import { loadFaqThread } from "./store/Reddit";
 import { setIsAdmin, setLoggedIn, setRedirectUrl } from "./store/User";
@@ -66,6 +67,7 @@ function App({
         </Route>
         <Route path="/login" component={LogIn} />
         <Route path="/sign-up" component={SignUp} />
+        <Route path="/vehicles/:id" component={VehicleView} />
         <Route path="/vehicles" component={Vehicles} />
         <ProtectedRoute
           path="/admin"
