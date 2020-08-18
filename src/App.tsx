@@ -5,6 +5,7 @@ import { connect, useDispatch } from "react-redux";
 import { Route, Switch } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Admin from "./admin";
+import Vehicles from "./admin/pages/Vehicles";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Updates from "./components/Updates";
