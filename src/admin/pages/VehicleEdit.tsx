@@ -1,9 +1,13 @@
 import _ from "lodash";
 import React from "react";
 import { Col, Container, Form, Image, Spinner } from "react-bootstrap";
+import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { compose } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
 import { Vehicle } from "../../models/vehicle";
+import { RootState } from "../../store";
+import { setVehicle, setVehicles } from "../../store/Vehicles";
 
 const shops = [
   "Legendary Motorsports",
@@ -19,6 +23,9 @@ interface VehicleEditMatch {
 
 interface VehicleEditProps extends RouteComponentProps<VehicleEditMatch> {
   firebase?: Firebase;
+  vehicles: Vehicle[];
+  setVehicle: typeof setVehicle;
+  setVehicles: typeof setVehicles;
 }
 
 interface VehicleEditState {
@@ -39,24 +46,35 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
 
   componentDidMount() {
     if (this.props.match.params.id) {
-      this.props.firebase?.db
-        .collection("vehicles")
-        .doc(this.props.match.params.id)
-        .get()
-        .then((docSnapshot: firebase.firestore.DocumentSnapshot) => {
-          if (docSnapshot.exists) {
-            this.setState({
-              vehicle: {
-                ...(docSnapshot.data() as Vehicle),
-                docRef: docSnapshot.ref,
-              },
-            });
-          } else {
-            this.setState({
-              vehicleExists: false,
-            });
-          }
+      if (!this.props.vehicles.length) {
+        this.props.firebase?.db
+          .collection("vehicles")
+          .get()
+          .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+            const v: Vehicle[] = [];
+            querySnapshot.forEach((doc: firebase.firestore.DocumentSnapshot) =>
+              v.push({
+                ...(doc.data() as Vehicle),
+                docRef: doc.ref,
+              })
+            );
+            this.props.setVehicles(v);
+          });
+      }
+      const vehicle = this.props.vehicles.filter(
+        (v) => v.docRef?.id === this.props.match.params.id
+      );
+      if (vehicle.length) {
+        this.setState({
+          vehicle: {
+            ...vehicle[0],
+          },
         });
+      } else {
+        this.setState({
+          vehicleExists: false,
+        });
+      }
     } else {
       this.setState({
         vehicle: { name: "" },
@@ -86,6 +104,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
         docRef
           .update(v)
           .then(() => {
+            this.props.setVehicle(this.state.vehicle!!);
             this.setState({
               loading: false,
             });
@@ -96,12 +115,14 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
           .collection("vehicles")
           .add(v)
           .then((ref: firebase.firestore.DocumentReference) => {
+            const v = {
+              ...this.state.vehicle!!,
+              docRef: ref,
+            };
             this.setState({
-              vehicle: {
-                ...this.state.vehicle!!,
-                docRef: ref,
-              },
+              vehicle: v,
             });
+            this.props.setVehicle(v);
           })
           .catch(console.error);
       }
@@ -116,13 +137,16 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
       <Container fluid>
         {vehicle ? (
           <div>
-            <h2>{vehicle.name}</h2>
+            <h2 className="pricedown">{vehicle.manufacturer}</h2>
+            <h1>{vehicle.name}</h1>
+
             <Image
               src={vehicle.img}
               className="my-4"
               thumbnail
               style={{ maxHeight: "200px" }}
             />
+
             <Form className="mt-2">
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
@@ -213,4 +237,13 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
   }
 }
 
-export default withFirebase(VehicleEdit);
+const mapDispatchToProps = { setVehicle, setVehicles };
+
+const mapStateToProps = (state: RootState) => ({
+  vehicles: state.vehicles.vehicles,
+});
+
+export default compose(
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
+)(VehicleEdit) as any;
