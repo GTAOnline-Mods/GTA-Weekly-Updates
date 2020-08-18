@@ -65,6 +65,7 @@ function App({
         </Route>
         <Route path="/login" component={LogIn} />
         <Route path="/sign-up" component={SignUp} />
+        <Route path="/vehicles" component={Vehicles} />
         <ProtectedRoute
           path="/admin"
           isAuthenticated={isAdmin}
