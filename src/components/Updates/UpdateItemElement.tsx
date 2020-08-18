@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Image, Modal } from "react-bootstrap";
 import { SaleItem, UpdateItem } from "../../models/update";
 
 interface UpdateItemCardProps {
@@ -13,16 +13,6 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
   const handleShow = () => {
     setShow(true);
   };
-
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
-  const formatPrice = (val: number) =>
-    formatter.format(val).replace("$", "GTA$");
 
   return (
     <React.Fragment>
@@ -40,16 +30,30 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
           <p>
             {(item as SaleItem).amount !== undefined ? (
               <span>
-                <del>{formatPrice(item.data?.price)}</del>{" "}
-                {formatPrice(
-                  item.data?.price * (1 - (item as SaleItem).amount / 100)
-                )}
+                <del>GTA$ {item.data?.price.toLocaleString()}</del> GTA${" "}
+                {(
+                  item.data?.price *
+                  (1 - (item as SaleItem).amount / 100)
+                ).toLocaleString()}
               </span>
             ) : (
-              <span>{formatPrice(item.data?.price)}</span>
+              <span>GTA$ {item.data?.price.toLocaleString()}</span>
+            )}
+            {item.data?.shop && (
+              <span className="mt-2">
+                <br/>
+                <b>Available at</b> {item.data?.shop}
+              </span>
             )}
           </p>
-          {item.data?.img && <img src={item.data?.img} alt={item.name} />}
+          {item.data?.img && (
+            <Image
+              src={item.data?.img}
+              className="mt-2"
+              thumbnail
+              style={{ maxHeight: "150px" }}
+            />
+          )}
         </Modal.Body>
 
         <Modal.Footer>
