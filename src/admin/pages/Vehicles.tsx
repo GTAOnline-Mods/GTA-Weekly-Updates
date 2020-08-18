@@ -16,6 +16,7 @@ interface VehiclesProps {
   vehicles: Vehicle[];
   setVehicles: typeof setVehicles;
   isAdmin: boolean;
+  admin: boolean;
 }
 
 function Vehicles({ firebase, vehicles, setVehicles, isAdmin }: VehiclesProps) {
@@ -47,7 +48,9 @@ function Vehicles({ firebase, vehicles, setVehicles, isAdmin }: VehiclesProps) {
             key={vehicle.docRef!.id}
             className="d-flex justify-content-between align-items-center"
           >
-            {vehicle.name}
+            <span>
+              <b>{vehicle.manufacturer}</b> {vehicle.name}
+            </span>
             {isAdmin && (
               <Button
                 variant="link"
