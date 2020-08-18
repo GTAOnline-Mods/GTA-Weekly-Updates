@@ -19,7 +19,13 @@ interface VehiclesProps {
   admin: boolean;
 }
 
-function Vehicles({ firebase, vehicles, setVehicles, isAdmin }: VehiclesProps) {
+function Vehicles({
+  firebase,
+  vehicles,
+  setVehicles,
+  isAdmin,
+  admin,
+}: VehiclesProps) {
   React.useEffect(() => {
     if (!vehicles.length) {
       firebase?.db
@@ -45,13 +51,16 @@ function Vehicles({ firebase, vehicles, setVehicles, isAdmin }: VehiclesProps) {
       <ListGroup>
         {vehicles.map((vehicle) => (
           <ListGroup.Item
+            action
+            as={Link}
+            to={"/vehicles/" + vehicle.docRef?.id}
             key={vehicle.docRef!.id}
             className="d-flex justify-content-between align-items-center"
           >
             <span>
               <b>{vehicle.manufacturer}</b> {vehicle.name}
             </span>
-            {isAdmin && (
+            {admin && isAdmin && (
               <Button
                 variant="link"
                 as={Link}
@@ -64,7 +73,7 @@ function Vehicles({ firebase, vehicles, setVehicles, isAdmin }: VehiclesProps) {
         ))}
       </ListGroup>
       <br />
-      {isAdmin && (
+      {admin && isAdmin && (
         <div className="d-flex flex-row-reverse">
           <Button variant="link" as={Link} to="/admin/vehicles/edit">
             Add

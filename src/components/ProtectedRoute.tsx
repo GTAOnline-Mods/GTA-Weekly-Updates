@@ -16,7 +16,7 @@ function ProtectedRoute(props: ProtectedRouteProps) {
     const renderComponent = () => <Redirect to={props.authenticationPath} />;
     return <Route {...props} component={renderComponent} render={undefined} />;
   } else {
-    return <Route {...props} />;
+    return <Route {...props}>{props.children}</Route>;
   }
 }
 

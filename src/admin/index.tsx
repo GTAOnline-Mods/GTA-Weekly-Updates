@@ -9,7 +9,7 @@ import Vehicles from "./pages/Vehicles";
 function Admin() {
   return (
     <Container fluid className="p-0 h-100">
-      <Row className="h-100">
+      <Row className="h-100 align-items-stretch">
         <Col md={3} sm={12} lg={2}>
           <Nav className="flex-md-column admin-nav h-100 p-2">
             <Nav.Link as={Link} to="/admin/vehicles" eventKey="vehicles">
@@ -23,7 +23,7 @@ function Admin() {
             </Nav.Link>
           </Nav>
         </Col>
-        <Col md={9} sm={12} lg={10}>
+        <Col md={9} sm={12} lg={10} className="h-100">
           <Switch>
             <Route path="/admin" exact>
               <Container fluid>
@@ -31,7 +31,9 @@ function Admin() {
               </Container>
             </Route>
             <Route path="/admin/vehicles/edit/:id?" component={VehicleEdit} />
-            <Route path="/admin/vehicles" component={Vehicles} />
+            <Route path="/admin/vehicles">
+              <Vehicles admin />
+            </Route>
           </Switch>
         </Col>
       </Row>

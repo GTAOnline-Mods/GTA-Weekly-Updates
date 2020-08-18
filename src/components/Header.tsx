@@ -52,7 +52,7 @@ function Header({
         {loggedIn ? (
           <Nav>
             {isAdmin && (
-              <Nav.Link as={Link} to="admin">
+              <Nav.Link as={Link} to="/admin">
                 Admin
               </Nav.Link>
             )}
@@ -60,10 +60,10 @@ function Header({
           </Nav>
         ) : (
           <Nav>
-            <Nav.Link as={Link} to="login">
+            <Nav.Link as={Link} to="/login">
               Log In
             </Nav.Link>
-            <Nav.Link as={Link} eventKey={2} to="sign-up">
+            <Nav.Link as={Link} eventKey={2} to="/sign-up">
               Sign Up
             </Nav.Link>
           </Nav>
