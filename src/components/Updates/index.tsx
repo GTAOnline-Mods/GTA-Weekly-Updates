@@ -31,48 +31,52 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
 
   return (
     <CardDeck>
-      {updates.map((update: Update, index: number) => (
-        <Card key={index}>
-          <Card.Body>
-            <Card.Title className="pb-2">Weekly Update</Card.Title>
-            {update.podium && (
-              <span>
-                <b>Podium Vehicle</b>
-                <br />
-                <ul>
-                  <UpdateItemElement
-                    key={update.podium.id}
-                    item={update.podium}
-                  />
-                </ul>
-              </span>
-            )}
-            {update.new.length ? <b>New Content</b> : ""}
-            <ul>
-              {update.new.map((item: UpdateItem) => (
-                <UpdateItemElement key={item.id} item={item} />
-              ))}
-            </ul>
-            {update.sale.length ? <b>Discounts</b> : ""}
-            <ul>
-              {update.sale.map((item: SaleItem) => (
-                <UpdateItemElement key={item.id} item={item} />
-              ))}
-            </ul>
-            {update.twitchPrime.length ? <b>Twitch Prime Bonuses</b> : ""}
-            <ul>
-              {update.twitchPrime.map((item: SaleItem) => (
-                <UpdateItemElement key={item.id} item={item} />
-              ))}
-            </ul>
-          </Card.Body>
-          <Card.Footer>
-            <small className="text-muted">
-              {update.date.toLocaleDateString()}
-            </small>
-          </Card.Footer>
-        </Card>
-      ))}
+      {updates
+        .sort((u1, u2) =>
+          u1.date === u2.date ? 0 : u1.date < u2.date ? 1 : -1
+        )
+        .map((update: Update, index: number) => (
+          <Card key={index}>
+            <Card.Body>
+              <Card.Title className="pb-2">Weekly Update</Card.Title>
+              {update.podium && (
+                <span>
+                  <b>Podium Vehicle</b>
+                  <br />
+                  <ul>
+                    <UpdateItemElement
+                      key={update.podium.id}
+                      item={update.podium}
+                    />
+                  </ul>
+                </span>
+              )}
+              {update.new.length ? <b>New Content</b> : ""}
+              <ul>
+                {update.new.map((item: UpdateItem) => (
+                  <UpdateItemElement key={item.id} item={item} />
+                ))}
+              </ul>
+              {update.sale.length ? <b>Discounts</b> : ""}
+              <ul>
+                {update.sale.map((item: SaleItem) => (
+                  <UpdateItemElement key={item.id} item={item} />
+                ))}
+              </ul>
+              {update.twitchPrime.length ? <b>Twitch Prime Bonuses</b> : ""}
+              <ul>
+                {update.twitchPrime.map((item: SaleItem) => (
+                  <UpdateItemElement key={item.id} item={item} />
+                ))}
+              </ul>
+            </Card.Body>
+            <Card.Footer>
+              <small className="text-muted">
+                {update.date.toLocaleDateString()}
+              </small>
+            </Card.Footer>
+          </Card>
+        ))}
     </CardDeck>
   );
 };
