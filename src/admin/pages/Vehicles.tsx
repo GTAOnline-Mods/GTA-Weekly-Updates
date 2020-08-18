@@ -48,6 +48,12 @@ function Vehicles({ firebase }: VehiclesProps) {
           </ListGroup.Item>
         ))}
       </ListGroup>
+      <br />
+      <div className="d-flex flex-row-reverse">
+        <Button variant="link" as={Link} to="/admin/vehicles/edit">
+          Add
+        </Button>
+      </div>
     </Container>
   );
 }
