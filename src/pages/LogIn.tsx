@@ -28,7 +28,7 @@ const LogIn = ({
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const logIn = async (event: React.FormEvent<HTMLFormElement>) => {
+  const logIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // tslint:disable-next-line: possible-timing-attack
     if (email === "" || password === "") {
@@ -41,13 +41,15 @@ const LogIn = ({
     } finally {
       if (firebase?.auth.currentUser !== null) {
         dispatch(setLoggedIn(true));
-        const snapshot = await firebase?.db
+        firebase?.db
           .collection("users")
           .doc(firebase?.auth.currentUser.uid)
-          .get();
-        if (snapshot?.exists && snapshot.data()?.admin) {
-          dispatch(setIsAdmin(true));
-        }
+          .get()
+          .then((snapshot: firebase.firestore.DocumentSnapshot) => {
+            if (snapshot?.exists && snapshot.data()?.admin) {
+              dispatch(setIsAdmin(true));
+            }
+          });
         const ru = redirectUrl || "/";
         dispatch(setRedirectUrl());
         history.push(ru);

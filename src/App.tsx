@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import React from "react";
 import { Container } from "react-bootstrap";
 import { connect, useDispatch } from "react-redux";
@@ -37,21 +38,19 @@ function App({
   React.useEffect(() => {
     loadFaqThread();
 
-    const checkUser = async () => {
-      if (firebase?.auth.currentUser !== null) {
-        dispatch(setLoggedIn(true));
+    if (firebase?.auth.currentUser !== null) {
+      dispatch(setLoggedIn(true));
 
-        const snapshot = await firebase?.db
-          .collection("users")
-          .doc(firebase?.auth.currentUser.uid)
-          .get();
-        if (snapshot?.exists && snapshot.data()?.admin) {
-          dispatch(setIsAdmin(true));
-        }
-      }
-    };
-
-    checkUser();
+      firebase?.db
+        .collection("users")
+        .doc(firebase?.auth.currentUser.uid)
+        .get()
+        .then((snapshot: firebase.firestore.DocumentSnapshot) => {
+          if (snapshot?.exists && snapshot.data()?.admin) {
+            dispatch(setIsAdmin(true));
+          }
+        });
+    }
   }, []);
 
   return (
