@@ -1,8 +1,8 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { compose } from "redux";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { RootState } from "../store";
 import { setIsAdmin, setLoggedIn } from "../store/User";
@@ -22,13 +22,11 @@ function Header({
   setIsAdmin,
   isAdmin,
 }: HeaderProps) {
-  const dispatch = useDispatch();
-
   const signOut = () => {
     try {
       firebase?.signOut();
-      dispatch(setLoggedIn(false));
-      dispatch(setIsAdmin(false));
+      setLoggedIn(false);
+      setIsAdmin(false);
     } catch (error) {
       console.error(error);
     }
@@ -78,7 +76,14 @@ const mapStateToProps = (state: RootState) => ({
   isAdmin: state.user.isAdmin,
 });
 
-const mapDispatchToProps = { setLoggedIn, setIsAdmin };
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setLoggedIn,
+      setIsAdmin,
+    },
+    dispatch
+  );
 
 export default compose(
   withFirebase,

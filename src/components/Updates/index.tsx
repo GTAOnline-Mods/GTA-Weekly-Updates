@@ -1,8 +1,8 @@
 // eslint-disable react-hooks/exhaustive-deps
 import React from "react";
 import { Card, CardDeck } from "react-bootstrap";
-import { connect, useDispatch } from "react-redux";
-import { compose } from "redux";
+import { connect } from "react-redux";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
 import Update, { SaleItem, UpdateItem } from "../../models/update";
 import { RootState } from "../../store";
@@ -16,12 +16,10 @@ interface UpdatesProps {
 }
 
 const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
-  const dispatch = useDispatch();
-
   React.useEffect(() => {
     async function getUpdates() {
       const u = await firebase!.getUpdates();
-      dispatch(setUpdates(u));
+      setUpdates(u);
     }
     if (!updates || updates.length === 0) {
       getUpdates();
@@ -85,9 +83,14 @@ const mapStateToProps = (state: RootState) => ({
   updates: state.updates.updates,
 });
 
-const mapDispatchToProps = { setUpdates };
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setUpdates,
+    },
+    dispatch
+  );
 
-// tslint:disable-next-line: export-name
 export default compose(
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps)

@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router";
-import { compose } from "redux";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { RootState } from "../store";
 import { setIsAdmin, setLoggedIn, setRedirectUrl } from "../store/User";
@@ -23,8 +23,6 @@ const LogIn = ({
   redirectUrl,
   setRedirectUrl,
 }: LogInProps) => {
-  const dispatch = useDispatch();
-
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -40,18 +38,18 @@ const LogIn = ({
       console.error(error);
     } finally {
       if (firebase?.auth.currentUser !== null) {
-        dispatch(setLoggedIn(true));
+        setLoggedIn(true);
         firebase?.db
           .collection("users")
           .doc(firebase?.auth.currentUser.uid)
           .get()
           .then((snapshot: firebase.firestore.DocumentSnapshot) => {
             if (snapshot?.exists && snapshot.data()?.admin) {
-              dispatch(setIsAdmin(true));
+              setIsAdmin(true);
             }
           });
         const ru = redirectUrl || "/";
-        dispatch(setRedirectUrl());
+        setRedirectUrl();
         history.push(ru);
       }
     }
@@ -99,7 +97,15 @@ const mapStateToProps = (state: RootState) => ({
   redirectUrl: state.user.redirectUrl,
 });
 
-const mapDispatchToProps = { setLoggedIn, setRedirectUrl, setIsAdmin };
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setLoggedIn,
+      setRedirectUrl,
+      setIsAdmin,
+    },
+    dispatch
+  );
 
 export default compose(
   withFirebase,

@@ -3,7 +3,7 @@ import React from "react";
 import { Col, Container, Form, Image, Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { compose } from "redux";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
@@ -237,7 +237,14 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
   }
 }
 
-const mapDispatchToProps = { setVehicle, setVehicles };
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setVehicle,
+      setVehicles,
+    },
+    dispatch
+  );
 
 const mapStateToProps = (state: RootState) => ({
   vehicles: state.vehicles.vehicles,

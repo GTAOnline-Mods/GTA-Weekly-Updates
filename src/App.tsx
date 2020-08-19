@@ -1,7 +1,7 @@
 import firebase from "firebase";
 import React from "react";
 import { Container } from "react-bootstrap";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Admin from "./admin";
@@ -35,13 +35,11 @@ function App({
   isAdmin,
   setRedirectUrl,
 }: AppProps) {
-  const dispatch = useDispatch();
-
   React.useEffect(() => {
     loadFaqThread();
 
     if (firebase?.auth.currentUser !== null) {
-      dispatch(setLoggedIn(true));
+      setLoggedIn(true);
 
       firebase?.db
         .collection("users")
@@ -49,7 +47,7 @@ function App({
         .get()
         .then((snapshot: firebase.firestore.DocumentSnapshot) => {
           if (snapshot?.exists && snapshot.data()?.admin) {
-            dispatch(setIsAdmin(true));
+            setIsAdmin(true);
           }
         });
     }
@@ -74,7 +72,7 @@ function App({
           isAuthenticated={isAdmin}
           component={Admin}
           authenticationPath="/login"
-          setRedirectUrl={(path) => dispatch(setRedirectUrl(path))}
+          setRedirectUrl={(path) => setRedirectUrl(path)}
         />
         <Route
           path="/weekly-faq"

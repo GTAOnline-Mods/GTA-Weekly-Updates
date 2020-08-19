@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { compose } from "redux";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { Vehicle } from "../models/vehicle";
 import { RootState } from "../store";
@@ -101,7 +101,13 @@ function VehicleView({
   }
 }
 
-const mapDispatchToProps = { setVehicles };
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setVehicles,
+    },
+    dispatch
+  );
 
 const mapStateToProps = (state: RootState) => ({
   vehicles: state.vehicles.vehicles,
