@@ -13,6 +13,8 @@ interface LogInProps extends RouteComponentProps<{}> {
   setIsAdmin: typeof setIsAdmin;
   redirectUrl?: string;
   setRedirectUrl: typeof setRedirectUrl;
+  loggedIn: boolean;
+  isAdmin: boolean;
 }
 
 const LogIn = ({
@@ -22,22 +24,24 @@ const LogIn = ({
   setIsAdmin,
   redirectUrl,
   setRedirectUrl,
+  loggedIn,
+  isAdmin,
 }: LogInProps) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const logIn = (event: React.FormEvent<HTMLFormElement>) => {
+  const logIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // tslint:disable-next-line: possible-timing-attack
     if (email === "" || password === "") {
       return;
     }
     try {
-      firebase?.signInWithEmailAndPassword(email, password);
+      await firebase?.signInWithEmailAndPassword(email, password);
     } catch (error) {
       console.error(error);
     } finally {
-      if (firebase?.auth.currentUser !== null) {
+      if (firebase?.auth.currentUser != null) {
         setLoggedIn(true);
         firebase?.db
           .collection("users")
@@ -48,12 +52,15 @@ const LogIn = ({
               setIsAdmin(true);
             }
           });
-        const ru = redirectUrl || "/";
-        setRedirectUrl();
-        history.push(ru);
       }
     }
   };
+
+  if (loggedIn) {
+    const ru = redirectUrl || "/";
+    setRedirectUrl();
+    history.push(ru);
+  }
 
   return (
     <Container fluid>
@@ -95,6 +102,8 @@ const LogIn = ({
 
 const mapStateToProps = (state: RootState) => ({
   redirectUrl: state.user.redirectUrl,
+  loggedIn: state.user.loggedIn,
+  isAdmin: state.user.isAdmin,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>

@@ -34,10 +34,14 @@ class Firebase {
       throw error;
     });
 
-  signInWithEmailAndPassword = (email: string, password: string) =>
-    this.auth.signInWithEmailAndPassword(email, password).catch((error) => {
+  signInWithEmailAndPassword = async (email: string, password: string) => {
+    try {
+      await this.auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
       console.error(error);
-    });
+      throw error;
+    }
+  };
 
   signOut = () =>
     this.auth.signOut().catch((error) => {
