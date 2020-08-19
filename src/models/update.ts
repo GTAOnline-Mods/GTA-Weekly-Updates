@@ -1,11 +1,12 @@
 import firebase from "firebase";
 
 export default interface Update {
-  podium: UpdateItem | null;
+  podium?: UpdateItem;
   new: UpdateItem[];
   sale: SaleItem[];
   date: Date;
   twitchPrime: SaleItem[];
+  docRef?: firebase.firestore.DocumentReference;
 }
 
 export interface SaleItem extends UpdateItem {
