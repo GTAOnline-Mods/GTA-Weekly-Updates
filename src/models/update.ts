@@ -1,6 +1,7 @@
 import firebase from "firebase";
 
 export default interface Update {
+  [name: string]: any;
   podium?: UpdateItem;
   new: UpdateItem[];
   sale: SaleItem[];
