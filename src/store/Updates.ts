@@ -13,7 +13,11 @@ export const setUpdates = (updates: Update[]) => {
   return typedAction("updates/SET", updates);
 };
 
-type UpdatesAction = ReturnType<typeof setUpdates>;
+export const setUpdate = (update: Update) => {
+  return typedAction("updates/SET_UPDATE", update);
+};
+
+type UpdatesAction = ReturnType<typeof setUpdates | typeof setUpdate>;
 
 export function updatesReducer(
   state = initialState,
@@ -24,6 +28,14 @@ export function updatesReducer(
       return {
         ...state,
         updates: action.payload,
+      };
+    case "updates/SET_UPDATE":
+      return {
+        ...state,
+        updates: [
+          ...state.updates.filter((u) => u.docRef !== action.payload.docRef),
+          action.payload,
+        ],
       };
     default:
       return state;
