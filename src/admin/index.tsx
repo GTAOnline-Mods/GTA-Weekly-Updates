@@ -21,6 +21,9 @@ function Admin() {
             <Nav.Link as={Link} to="/admin/properties" eventKey="properties">
               Properties
             </Nav.Link>
+            <Nav.Link as={Link} to="/admin/updates" eventKey="properties">
+              Updates
+            </Nav.Link>
           </Nav>
         </Col>
         <Col md={9} sm={12} lg={10} className="h-100">
@@ -33,6 +36,10 @@ function Admin() {
             <Route path="/admin/vehicles/edit/:id?" component={VehicleEdit} />
             <Route path="/admin/vehicles">
               <Vehicles admin />
+            </Route>
+            <Route path="/admin/updates/edit/:id?" component={VehicleEdit} />
+            <Route path="/admin/updates">
+              <Vehicles />
             </Route>
           </Switch>
         </Col>
