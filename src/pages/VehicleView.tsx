@@ -18,6 +18,8 @@ interface VehicleViewProps extends RouteComponentProps<VehicleViewMatch> {
   setVehicles: typeof setVehicles;
 }
 
+// tslint:disable-next-line: function-name
+// tslint:disable-next-line: react-a11y-accessible-headings
 function VehicleView({
   firebase,
   vehicles,
@@ -28,34 +30,19 @@ function VehicleView({
   const [vehicleExists, setVehicleExists] = React.useState(true);
 
   React.useEffect(() => {
-    if (!vehicles.length) {
-      firebase?.db
-        .collection("vehicles")
-        .get()
-        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
-          const v: Vehicle[] = [];
-          querySnapshot.forEach((doc: firebase.firestore.DocumentSnapshot) => {
-            if (doc.id === match.params.id) {
-              setVehicle({
-                ...(doc.data() as Vehicle),
-                docRef: doc.ref,
-              });
-            }
-            v.push({
-              ...(doc.data() as Vehicle),
-              docRef: doc.ref,
-            });
-            setVehicleExists(false);
-          });
-          setVehicles(v);
-        });
+    async function getVehicles() {
+      const v = await firebase!.getVehicles();
+      setVehicles(v);
+    }
+    if (!vehicles || vehicles.length === 0) {
+      getVehicles();
+    }
+
+    const v = vehicles.filter((v) => v.docRef?.id === match.params.id);
+    if (v.length) {
+      setVehicle(v[0]);
     } else {
-      const v = vehicles.filter((v) => v.docRef?.id === match.params.id);
-      if (v.length) {
-        setVehicle(v[0]);
-      } else {
-        setVehicleExists(false);
-      }
+      setVehicleExists(false);
     }
   }, []);
 

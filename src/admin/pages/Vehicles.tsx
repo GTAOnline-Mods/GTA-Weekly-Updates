@@ -1,8 +1,8 @@
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import firebase from "firebase";
 import React from "react";
 import { Button, Container, ListGroup } from "react-bootstrap";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
@@ -26,20 +26,13 @@ function Vehicles({
   admin,
 }: VehiclesProps) {
   React.useEffect(() => {
+    async function getVehicles() {
+      const v = await firebase!.getVehicles();
+      setVehicles(v);
+    }
+
     if (!vehicles.length) {
-      firebase?.db
-        .collection("vehicles")
-        .get()
-        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
-          const v: Vehicle[] = [];
-          querySnapshot.forEach((doc: firebase.firestore.DocumentSnapshot) =>
-            v.push({
-              ...(doc.data() as Vehicle),
-              docRef: doc.ref,
-            })
-          );
-          setVehicles(v);
-        });
+      getVehicles();
     }
   }, []);
 

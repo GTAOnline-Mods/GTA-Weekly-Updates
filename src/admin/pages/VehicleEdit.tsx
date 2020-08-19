@@ -44,26 +44,16 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.match.params.id) {
       if (!this.props.vehicles.length) {
-        this.props.firebase?.db
-          .collection("vehicles")
-          .get()
-          .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
-            const v: Vehicle[] = [];
-            querySnapshot.forEach((doc: firebase.firestore.DocumentSnapshot) =>
-              v.push({
-                ...(doc.data() as Vehicle),
-                docRef: doc.ref,
-              })
-            );
-            this.props.setVehicles(v);
-          });
+        const v = await this.props.firebase!.getVehicles();
+        this.props.setVehicles(v);
       }
       const vehicle = this.props.vehicles.filter(
         (v) => v.docRef?.id === this.props.match.params.id
       );
+
       if (vehicle.length) {
         this.setState({
           vehicle: {

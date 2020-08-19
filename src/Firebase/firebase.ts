@@ -3,6 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/functions";
 import Update from "../models/update";
+import { Vehicle } from "../models/vehicle";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAuQm6JQ5NtDuPcxcOskE9TieIWgeNVTr8",
@@ -88,11 +89,27 @@ class Firebase {
         sale: await getSales(doc.data()!.sale),
         twitchPrime: await getSales(doc.data()!.twitchPrime),
         date: new Date(doc.data()!.date.seconds * 1000),
+        docRef: doc.ref,
       };
       u.push(update);
     }
 
     return u;
+  };
+
+  getVehicles = async () => {
+    const snapshot = await this.db.collection("vehicles").get();
+
+    const v: Vehicle[] = [];
+
+    for (const doc of snapshot!.docs) {
+      v.push({
+        ...(doc.data() as Vehicle),
+        docRef: doc.ref,
+      });
+    }
+
+    return v;
   };
 }
 
