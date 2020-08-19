@@ -4,30 +4,33 @@ name: Firebase Deploy Hosting
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy_to_firebase_hosting:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
-    
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@master
-        
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install Packages
         run: npm install
+
       - name: Build page
         run: npm run build
-        
+        env:
+          CI: false
+
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
