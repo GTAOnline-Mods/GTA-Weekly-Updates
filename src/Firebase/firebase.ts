@@ -60,7 +60,9 @@ class Firebase {
     const getItem = async (item: app.firestore.DocumentReference) => {
       const s = await item.get();
       return {
-        name: s.data()!.name,
+        name: s.data()!.manufacturer
+          ? `${s.data()!.manufacturer} ${s.data()!.name}`
+          : s.data()!.name,
         docRef: item,
         id: item.id,
         data: s.data()!,
@@ -68,7 +70,13 @@ class Firebase {
     };
 
     const getItems = async (items?: app.firestore.DocumentData[]) =>
-      items ? Promise.all(items.map((item) => getItem(item.item))) : [];
+      items
+        ? Promise.all(
+            items
+              .filter((item) => item != null)
+              .map((item) => getItem(item.item || item))
+          )
+        : [];
 
     const getSales = async (sale?: app.firestore.DocumentData[]) =>
       sale
