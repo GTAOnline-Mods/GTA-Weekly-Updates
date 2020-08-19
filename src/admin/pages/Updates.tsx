@@ -41,14 +41,12 @@ function Updates({ updates, setUpdates, firebase }: UpdatesProps) {
             <ListGroup.Item
               action
               key={update.docRef!.id}
+              as={Link}
+              to={"/admin/updates/edit/" + update.docRef?.id}
               className="d-flex justify-content-between align-items-center"
             >
               {update.date.toLocaleDateString()}
-              <Button
-                variant="link"
-                as={Link}
-                to={"/admin/updates/edit/" + update.docRef?.id}
-              >
+              <Button variant="link">
                 <FontAwesomeIcon icon={faEdit} />
               </Button>
             </ListGroup.Item>
