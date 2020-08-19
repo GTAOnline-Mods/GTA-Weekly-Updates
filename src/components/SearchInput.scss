@@ -1,0 +1,44 @@
+@import "../index.scss";
+
+.dropdown-toggle::after {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+
+.input-group.vertical {
+  flex-direction: column;
+
+  & > .form-control {
+    border-radius: 0.25rem !important;
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  & > .form-control:not(:last-child) {
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+
+  & > .form-control:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-top: none;
+  }
+}
+
+.dropdown.rockstar-yellow {
+  & > button {
+    background-color: $rockstar-yellow !important;
+    border: 2px solid rgba(0, 0, 0, 0.16) !important;
+  }
+}
+
+.input-group div:first-child {
+  flex: 1000;
+}
+
+.btn.rockstar-yellow {
+  background-color: $rockstar-yellow !important;
+  border: 2px solid rgba(0, 0, 0, 0.16) !important;
+}
