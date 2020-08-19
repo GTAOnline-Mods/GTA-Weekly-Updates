@@ -2,6 +2,8 @@ $theme-colors: (
   "success": #cfe2ce,
 );
 
+$rockstar-yellow: #f99c1c;
+
 @import "~bootstrap/scss/bootstrap";
 
 @font-face {
@@ -51,7 +53,7 @@ code {
   left: 0;
   right: 0;
   height: 14rem;
-  background-color: #f99c1c;
+  background-color: $rockstar-yellow;
   z-index: -100;
 }
 
