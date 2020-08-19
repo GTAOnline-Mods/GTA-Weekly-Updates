@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import firebase from "firebase";
 import React from "react";
 import { Container } from "react-bootstrap";
@@ -5,7 +6,7 @@ import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Admin from "./admin";
-import Vehicles from "./admin/pages/Vehicles";
+import Vehicles from "./components/Vehicles";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Updates from "./components/Updates";
@@ -40,17 +41,15 @@ function App({
 
     if (firebase?.auth.currentUser !== null) {
       setLoggedIn(true);
-
-      firebase?.db
-        .collection("users")
-        .doc(firebase?.auth.currentUser.uid)
-        .get()
-        .then((snapshot: firebase.firestore.DocumentSnapshot) => {
-          if (snapshot?.exists && snapshot.data()?.admin) {
+      firebase
+        ?.getUserDoc(firebase?.auth.currentUser.uid)
+        .then((snapshot: firebase.firestore.DocumentSnapshot | null) => {
+          if (snapshot && snapshot.data()?.admin) {
             setIsAdmin(true);
           }
         });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

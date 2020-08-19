@@ -6,7 +6,7 @@ import "./index.scss";
 import UpdateEdit from "./pages/UpdateEdit";
 import Updates from "./pages/Updates";
 import VehicleEdit from "./pages/VehicleEdit";
-import Vehicles from "./pages/Vehicles";
+import Vehicles from "../components/Vehicles";
 
 function Admin() {
   return (

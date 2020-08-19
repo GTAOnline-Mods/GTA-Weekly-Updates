@@ -5,10 +5,10 @@ import { Button, Container, ListGroup } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators, compose, Dispatch } from "redux";
-import Firebase, { withFirebase } from "../../Firebase";
-import { Vehicle } from "../../models/vehicle";
-import { RootState } from "../../store";
-import { setVehicles } from "../../store/Vehicles";
+import Firebase, { withFirebase } from "../Firebase";
+import { Vehicle } from "../models/vehicle";
+import { RootState } from "../store";
+import { setVehicles } from "../store/Vehicles";
 
 interface VehiclesProps {
   firebase?: Firebase;
@@ -34,6 +34,7 @@ function Vehicles({
     if (!vehicles.length) {
       getVehicles();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

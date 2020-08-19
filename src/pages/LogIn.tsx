@@ -43,12 +43,10 @@ const LogIn = ({
     } finally {
       if (firebase?.auth.currentUser != null) {
         setLoggedIn(true);
-        firebase?.db
-          .collection("users")
-          .doc(firebase?.auth.currentUser.uid)
-          .get()
-          .then((snapshot: firebase.firestore.DocumentSnapshot) => {
-            if (snapshot?.exists && snapshot.data()?.admin) {
+        firebase
+          ?.getUserDoc(firebase?.auth.currentUser.uid)
+          .then((snapshot: firebase.firestore.DocumentSnapshot | null) => {
+            if (snapshot && snapshot.data()?.admin) {
               setIsAdmin(true);
             }
           });

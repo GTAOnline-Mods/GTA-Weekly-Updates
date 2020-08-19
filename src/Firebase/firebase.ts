@@ -58,6 +58,14 @@ class Firebase {
       console.error(error);
     });
 
+  getUserDoc = async (userId: string) => {
+    const snapshot = await this.db.collection("users").doc(userId).get();
+    if (snapshot?.exists) {
+      return snapshot;
+    }
+    return null;
+  };
+
   getUpdates = async () => {
     const snapshot = await this.db.collection("updates").get();
 

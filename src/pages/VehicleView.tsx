@@ -44,6 +44,7 @@ function VehicleView({
     } else {
       setVehicleExists(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (vehicle) {
