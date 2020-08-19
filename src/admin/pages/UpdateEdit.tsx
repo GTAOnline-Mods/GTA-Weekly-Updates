@@ -1,9 +1,18 @@
+import firebase from "firebase";
 import _ from "lodash";
 import React from "react";
-import { Col, Container, Form, Image, Spinner } from "react-bootstrap";
+import { Container, Form, Spinner } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
+import Update from "../../models/update";
 import { Vehicle } from "../../models/vehicle";
+import { RootState } from "../../store";
+import { setUpdate, setUpdates } from "../../store/Updates";
+import { setVehicles } from "../../store/Vehicles";
+import "./UpdateEdit.scss";
 
 const shops = [
   "Legendary Motorsports",
@@ -13,70 +22,86 @@ const shops = [
   "Benny's Original Motor Works",
 ];
 
-interface VehicleEditMatch {
+interface UpdateEditMatch {
   id?: string;
 }
 
-interface VehicleEditProps extends RouteComponentProps<VehicleEditMatch> {
+interface UpdateEditProps extends RouteComponentProps<UpdateEditMatch> {
   firebase?: Firebase;
+  updates: Update[];
+  setUpdate: typeof setUpdate;
+  setUpdates: typeof setUpdates;
+  vehicles: Vehicle[];
+  setVehicles: typeof setVehicles;
 }
 
-interface VehicleEditState {
-  vehicle?: Vehicle;
-  vehicleExists: boolean;
+interface UpdateEditState {
+  update?: Update;
+  updateExists: boolean;
   loading: boolean;
 }
 
-class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
-  constructor(props: VehicleEditProps) {
+class VehicleEdit extends React.Component<UpdateEditProps, UpdateEditState> {
+  constructor(props: UpdateEditProps) {
     super(props);
 
     this.state = {
-      vehicleExists: true,
+      updateExists: true,
       loading: false,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.match.params.id) {
-      this.props.firebase?.db
-        .collection("vehicles")
-        .doc(this.props.match.params.id)
-        .get()
-        .then((docSnapshot: firebase.firestore.DocumentSnapshot) => {
-          if (docSnapshot.exists) {
-            this.setState({
-              vehicle: {
-                ...(docSnapshot.data() as Vehicle),
-                docRef: docSnapshot.ref,
-              },
-            });
-          } else {
-            this.setState({
-              vehicleExists: false,
-            });
-          }
+      if (!this.props.updates.length) {
+        const u = await this.props.firebase!.getUpdates();
+        this.props.setUpdates(u);
+      }
+
+      const update = this.props.updates.filter(
+        (u) => u.docRef?.id === this.props.match.params.id
+      );
+
+      if (update.length) {
+        this.setState({
+          update: update[0],
         });
+      } else {
+        this.setState({
+          updateExists: false,
+        });
+        return;
+      }
     } else {
       this.setState({
-        vehicle: { name: "" },
+        update: {
+          new: [],
+          sale: [],
+          twitchPrime: [],
+          date: new Date(),
+        },
       });
+    }
+
+    if (!this.props.vehicles.length) {
+      const v = await this.props.firebase!.getVehicles();
+      this.props.setVehicles(v);
     }
   }
 
   setValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      vehicle: {
-        ...this.state.vehicle!!,
+      update: {
+        ...this.state.update!!,
         [event.target.name]: event.target.value,
       },
     });
-    this.saveVehicle();
+    this.saveUpdate();
   };
 
-  saveVehicle = _.debounce(() => {
-    if (this.state.vehicle) {
-      const { docRef, ...v } = this.state.vehicle;
+  saveUpdate = _.debounce(() => {
+    if (this.state.update) {
+      const { docRef, ...u } = this.state.update;
 
       this.setState({
         loading: true,
@@ -84,8 +109,18 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
 
       if (docRef) {
         docRef
-          .update(v)
+          .update({
+            new: u.new.map((i) => i.docRef),
+            podium: u.podium?.docRef,
+            sale: u.sale.map((i) => ({ item: i.docRef, amount: i.amount })),
+            twitchPrime: u.twitchPrime.map((i) => ({
+              item: i.docRef,
+              amount: i.amount,
+            })),
+            date: firebase.firestore.Timestamp.fromDate(u.date),
+          })
           .then(() => {
+            this.props.setUpdate(this.state.update!!);
             this.setState({
               loading: false,
             });
@@ -93,108 +128,49 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
           .catch(console.error);
       } else {
         this.props.firebase?.db
-          .collection("vehicles")
-          .add(v)
+          .collection("updates")
+          .add({
+            ...u,
+            date: firebase.firestore.Timestamp.fromDate(u.date),
+          })
           .then((ref: firebase.firestore.DocumentReference) => {
+            const u = {
+              ...this.state.update!!,
+              docRef: ref,
+            };
             this.setState({
-              vehicle: {
-                ...this.state.vehicle!!,
-                docRef: ref,
-              },
+              update: u,
             });
+            this.props.setUpdate(u);
           })
           .catch(console.error);
       }
     }
   }, 1000);
 
+  // tslint:disable-next-line: max-func-body-length
   render() {
-    const { vehicle, vehicleExists, loading } = this.state;
+    const { update, updateExists, loading } = this.state;
     const { match } = this.props;
 
     return (
       <Container fluid>
-        {vehicle ? (
+        {update ? (
           <div>
-            <h2>{vehicle.name}</h2>
-            <Image
-              src={vehicle.img}
-              className="my-4"
-              thumbnail
-              style={{ maxHeight: "200px" }}
+            <h2>{update.date.toLocaleDateString()}</h2>
+            <Form className="mt-2">Test.</Form>
+            <DatePicker
+              selected={update.date}
+              onChange={(date: Date) => {
+                this.setState({
+                  update: {
+                    ...update!,
+                    date: date,
+                  },
+                });
+                this.saveUpdate();
+              }}
             />
-            <Form className="mt-2">
-              <Form.Row className="mb-2">
-                <Form.Group as={Col}>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    name="manufacturer"
-                    value={vehicle.manufacturer}
-                    onChange={this.setValue}
-                  />
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Control
-                    placeholder="Name"
-                    name="name"
-                    value={vehicle.name}
-                    onChange={this.setValue}
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row className="mb-2">
-                <Form.Group as={Col}>
-                  <Form.Control
-                    placeholder="Image"
-                    name="img"
-                    value={vehicle.img}
-                    onChange={this.setValue}
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row className="mb-2">
-                <Form.Group as={Col}>
-                  <Form.Control
-                    placeholder="Price"
-                    name="price"
-                    value={vehicle.price}
-                    onChange={this.setValue}
-                    type="number"
-                  />
-                </Form.Group>
-                <Col>
-                  <Form.Group className="d-flex align-items-center">
-                    <Form.Label className="m-0 px-4">Shop</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="shop"
-                      value={vehicle.shop}
-                      onChange={this.setValue}
-                    >
-                      {shops.map((shop, index) => (
-                        <option
-                          key={index}
-                          value={shop}
-                          aria-selected={shop === vehicle.shop}
-                        >
-                          {shop}
-                        </option>
-                      ))}
-                    </Form.Control>
-                  </Form.Group>
-                </Col>
-              </Form.Row>
-              <Form.Row className="mb-2">
-                <Form.Group as={Col}>
-                  <Form.Control
-                    placeholder="URL"
-                    name="url"
-                    value={vehicle.url}
-                    onChange={this.setValue}
-                  />
-                </Form.Group>
-              </Form.Row>
-            </Form>
             {loading && (
               <div className="d-flex flex-row-reverse">
                 <Spinner animation="border" role="status" className="mr-4 mt-2">
@@ -203,9 +179,9 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
               </div>
             )}
           </div>
-        ) : match.params.id && !vehicleExists ? (
+        ) : match.params.id && !updateExists ? (
           <div>
-            <h2>Vehicle not found.</h2>
+            <h2>Update not found.</h2>
           </div>
         ) : null}
       </Container>
@@ -213,4 +189,22 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
   }
 }
 
-export default withFirebase(VehicleEdit);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setUpdate,
+      setUpdates,
+      setVehicles,
+    },
+    dispatch
+  );
+
+const mapStateToProps = (state: RootState) => ({
+  updates: state.updates.updates,
+  vehicles: state.vehicles.vehicles,
+});
+
+export default compose(
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
+)(VehicleEdit) as any;

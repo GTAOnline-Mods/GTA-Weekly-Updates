@@ -3,6 +3,8 @@ import { Col, Container, Nav, Row } from "react-bootstrap";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import "./index.scss";
+import UpdateEdit from "./pages/UpdateEdit";
+import Updates from "./pages/Updates";
 import VehicleEdit from "./pages/VehicleEdit";
 import Vehicles from "./pages/Vehicles";
 
@@ -37,10 +39,8 @@ function Admin() {
             <Route path="/admin/vehicles">
               <Vehicles admin />
             </Route>
-            <Route path="/admin/updates/edit/:id?" component={VehicleEdit} />
-            <Route path="/admin/updates">
-              <Vehicles />
-            </Route>
+            <Route path="/admin/updates/edit/:id?" component={UpdateEdit} />
+            <Route path="/admin/updates" component={Updates} />
           </Switch>
         </Col>
       </Row>

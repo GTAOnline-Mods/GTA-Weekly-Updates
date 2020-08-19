@@ -1,11 +1,14 @@
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import firebase from "firebase";
 import React from "react";
 import { Button, Container, ListGroup } from "react-bootstrap";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
-import { Vehicle } from "../../models/vehicle";
+import Update from "../../models/update";
+import { RootState } from "../../store";
+import { setUpdates } from "../../store/Updates";
 
 interface UpdatesProps {
   firebase?: Firebase;
@@ -13,46 +16,47 @@ interface UpdatesProps {
   setUpdates: typeof setUpdates;
 }
 
-function Updates({ firebase }: UpdatesProps) {
-  const [vehicles, setVehicles] = React.useState<Vehicle[]>([]);
-
+function Updates({ updates, setUpdates, firebase }: UpdatesProps) {
   React.useEffect(() => {
-    firebase?.db
-      .collection("vehicles")
-      .get()
-      .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
-        const v: Vehicle[] = [];
-        querySnapshot.forEach((doc: firebase.firestore.DocumentSnapshot) =>
-          v.push({
-            ...(doc.data() as Vehicle),
-            docRef: doc.ref,
-          })
-        );
-        setVehicles(v);
-      });
+    async function getUpdates() {
+      const u = await firebase!.getUpdates();
+      setUpdates(u);
+    }
+    if (!updates || updates.length === 0) {
+      getUpdates();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Container fluid className="p-2">
-      <h1>Vehicles</h1>
+      <h1>Updates</h1>
       <br />
       <ListGroup>
-        {vehicles.map((vehicle) => (
-          <ListGroup.Item className="d-flex justify-content-between align-items-center">
-            {vehicle.name}
-            <Button
-              variant="link"
-              as={Link}
-              to={"/admin/vehicles/edit/" + vehicle.docRef?.id}
+        {updates
+          .sort((u1, u2) =>
+            u1.date === u2.date ? 0 : u1.date < u2.date ? 1 : -1
+          )
+          .map((update) => (
+            <ListGroup.Item
+              action
+              key={update.docRef!.id}
+              className="d-flex justify-content-between align-items-center"
             >
-              <FontAwesomeIcon icon={faEdit} />
-            </Button>
-          </ListGroup.Item>
-        ))}
+              {update.date.toLocaleDateString()}
+              <Button
+                variant="link"
+                as={Link}
+                to={"/admin/updates/edit/" + update.docRef?.id}
+              >
+                <FontAwesomeIcon icon={faEdit} />
+              </Button>
+            </ListGroup.Item>
+          ))}
       </ListGroup>
       <br />
       <div className="d-flex flex-row-reverse">
-        <Button variant="link" as={Link} to="/admin/vehicles/edit">
+        <Button variant="link" as={Link} to="/admin/updates/edit">
           Add
         </Button>
       </div>
@@ -60,4 +64,19 @@ function Updates({ firebase }: UpdatesProps) {
   );
 }
 
-export default withFirebase(Vehicles);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setUpdates,
+    },
+    dispatch
+  );
+
+const mapStateToProps = (state: RootState) => ({
+  updates: state.updates.updates,
+});
+
+export default compose(
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
+)(Updates) as any;
