@@ -137,7 +137,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
               style={{ maxHeight: "200px" }}
             />
 
-            <Form className="mt-2">
+            <Form className="mt-2" onSubmit={(e) => e.preventDefault()}>
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
                   <Form.Control
