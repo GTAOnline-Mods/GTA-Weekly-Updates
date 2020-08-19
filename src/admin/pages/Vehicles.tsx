@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import firebase from "firebase";
 import React from "react";
 import { Button, Container, ListGroup } from "react-bootstrap";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { compose } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
@@ -26,6 +26,8 @@ function Vehicles({
   isAdmin,
   admin,
 }: VehiclesProps) {
+  const dispatch = useDispatch();
+
   React.useEffect(() => {
     if (!vehicles.length) {
       firebase?.db
@@ -39,7 +41,7 @@ function Vehicles({
               docRef: doc.ref,
             })
           );
-          setVehicles(v);
+          dispatch(setVehicles(v));
         });
     }
   }, []);
