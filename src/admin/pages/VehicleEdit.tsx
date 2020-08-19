@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import _ from "lodash";
 import React from "react";
 import { Col, Container, Form, Image, Spinner } from "react-bootstrap";
@@ -50,15 +51,14 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
         const v = await this.props.firebase!.getVehicles();
         this.props.setVehicles(v);
       }
+
       const vehicle = this.props.vehicles.filter(
         (v) => v.docRef?.id === this.props.match.params.id
       );
 
       if (vehicle.length) {
         this.setState({
-          vehicle: {
-            ...vehicle[0],
-          },
+          vehicle: vehicle[0],
         });
       } else {
         this.setState({
