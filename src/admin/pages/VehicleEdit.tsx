@@ -117,7 +117,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
           .catch(console.error);
       }
     }
-  }, 1000);
+  }, 5000);
 
   render() {
     const { vehicle, vehicleExists, loading } = this.state;

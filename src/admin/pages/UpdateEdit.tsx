@@ -147,7 +147,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
       const update = {
         ...u,
         new: [...u.new.map((i) => i.docRef)],
-        podium: u.podium?.docRef,
+        podium: u.podium?.docRef || null,
         sale: [...u.sale.map((i) => ({ item: i.docRef, amount: i.amount }))],
         twitchPrime: [
           ...u.twitchPrime.map((i) => ({
@@ -192,7 +192,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           .catch(console.error);
       }
     }
-  }, 1000);
+  }, 5000);
 
   // tslint:disable-next-line: max-func-body-length
   render() {
