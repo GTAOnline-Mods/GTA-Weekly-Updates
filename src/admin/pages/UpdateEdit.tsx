@@ -1,7 +1,15 @@
 import firebase from "firebase";
 import _ from "lodash";
 import React from "react";
-import { Col, Container, Form, ListGroup, Spinner } from "react-bootstrap";
+import {
+  Col,
+  Container,
+  Form,
+  FormControl,
+  InputGroup,
+  ListGroup,
+  Spinner
+} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
@@ -137,6 +145,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
       const { docRef, ...u } = this.state.update;
 
       const update = {
+        ...u,
         new: [...u.new.map((i) => i.docRef)],
         podium: u.podium?.docRef,
         sale: [...u.sale.map((i) => ({ item: i.docRef, amount: i.amount }))],
@@ -291,6 +300,92 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       />
                     ))}
                   </ListGroup>
+                </Form.Group>
+              </Form.Row>
+              <Form.Label>Featured Content</Form.Label>
+              <Form.Row className="my-2">
+                <Form.Group as={Col} md="6" sm="12">
+                  <InputGroup className="mb-3">
+                    <InputGroup.Prepend>
+                      <InputGroup.Text>Time Trial</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl
+                      value={update.timeTrial?.name}
+                      placeholder="Name"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("timeTrial", {
+                          ...update.timeTrial,
+                          name: event.target.value,
+                        })
+                      }
+                    />
+                    <FormControl
+                      value={update.timeTrial?.parTime}
+                      placeholder="Par Time"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("timeTrial", {
+                          ...update.timeTrial,
+                          parTime: event.target.value,
+                        })
+                      }
+                    />
+                    <FormControl
+                      value={update.timeTrial?.url}
+                      placeholder="URL"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("timeTrial", {
+                          ...update.timeTrial,
+                          url: event.target.value,
+                        })
+                      }
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group as={Col} md="6" sm="12">
+                  <InputGroup className="mb-3">
+                    <InputGroup.Prepend>
+                      <InputGroup.Text>RC Time Trial</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl
+                      value={update.rcTimeTrial?.name}
+                      placeholder="Name"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("rcTimeTrial", {
+                          ...update.rcTimeTrial,
+                          name: event.target.value,
+                        })
+                      }
+                    />
+                    <FormControl
+                      value={update.rcTimeTrial?.parTime}
+                      placeholder="Par Time"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("rcTimeTrial", {
+                          ...update.rcTimeTrial,
+                          parTime: event.target.value,
+                        })
+                      }
+                    />
+                    <FormControl
+                      value={update.rcTimeTrial?.url}
+                      placeholder="URL"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("rcTimeTrial", {
+                          ...update.rcTimeTrial,
+                          url: event.target.value,
+                        })
+                      }
+                    />
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group as={Col} md="6" sm="12">
+                  <InputGroup className="mb-3">
+                    <InputGroup.Prepend>
+                      <InputGroup.Text>Premium Race</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl placeholder="Name" />
+                    <FormControl placeholder="URL" />
+                  </InputGroup>
                 </Form.Group>
               </Form.Row>
             </Form>
