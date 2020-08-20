@@ -383,8 +383,26 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                     <InputGroup.Prepend>
                       <InputGroup.Text>Premium Race</InputGroup.Text>
                     </InputGroup.Prepend>
-                    <FormControl placeholder="Name" />
-                    <FormControl placeholder="URL" />
+                    <FormControl
+                      value={update.premiumRace?.url}
+                      placeholder="Name"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("premiumRace", {
+                          ...update.premiumRace,
+                          name: event.target.value,
+                        })
+                      }
+                    />
+                    <FormControl
+                      value={update.premiumRace?.url}
+                      placeholder="URL"
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        this.setValue("premiumRace", {
+                          ...update.premiumRace,
+                          url: event.target.value,
+                        })
+                      }
+                    />
                   </InputGroup>
                 </Form.Group>
               </Form.Row>
