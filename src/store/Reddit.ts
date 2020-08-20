@@ -1,10 +1,12 @@
 import { Dispatch } from "react";
 import { AnyAction } from "redux";
+import Snoowrap from "snoowrap";
 import { typedAction } from "./actions";
 
 interface RedditState {
   faqThread?: string;
   loading: boolean;
+  redditClient?: Snoowrap;
 }
 
 const initialState: RedditState = {
@@ -32,7 +34,11 @@ export const loadFaqThread = () => {
   };
 };
 
-type RedditAction = ReturnType<typeof setFaqThread>;
+export const setRedditClient = (client: Snoowrap) => {
+  return typedAction("reddit/SET_REDDIT_CLIENT", client);
+};
+
+type RedditAction = ReturnType<typeof setFaqThread | typeof setRedditClient>;
 
 export function redditReducer(
   state = initialState,
@@ -43,6 +49,11 @@ export function redditReducer(
       return {
         ...state,
         faqThread: action.payload,
+      };
+    case "reddit/SET_REDDIT_CLIENT":
+      return {
+        ...state,
+        redditClient: action.payload,
       };
     default:
       return state;
