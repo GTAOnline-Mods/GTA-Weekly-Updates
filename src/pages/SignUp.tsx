@@ -32,13 +32,10 @@ const SignUp = ({
       return;
     }
     firebase?.createUserWithEmailAndPassword(email, password).catch(setError);
-  };
-
-  if (loggedIn) {
     const ru = redirectUrl || "/";
     setRedirectUrl();
     history.push(ru);
-  }
+  };
 
   return (
     <Container fluid>

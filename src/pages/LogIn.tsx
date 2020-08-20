@@ -41,22 +41,16 @@ const LogIn = ({
     } finally {
       if (firebase?.auth.currentUser != null) {
         setLoggedIn(true);
-        firebase
-          ?.getUserDoc(firebase?.auth.currentUser.uid)
-          .then((snapshot: firebase.firestore.DocumentSnapshot | null) => {
-            if (snapshot && snapshot.data()?.admin) {
-              setIsAdmin(true);
-            }
-          });
+        const snapshot = await firebase?.getUserDoc(firebase?.auth.currentUser.uid);
+        if (snapshot && snapshot.data()?.admin) {
+          setIsAdmin(true);
+        }
+        const ru = redirectUrl || "/";
+        setRedirectUrl();
+        history.push(ru);
       }
     }
   };
-
-  if (loggedIn) {
-    const ru = redirectUrl || "/";
-    setRedirectUrl();
-    history.push(ru);
-  }
 
   return (
     <Container fluid>
