@@ -14,7 +14,6 @@ interface LogInProps extends RouteComponentProps<{}> {
   redirectUrl?: string;
   setRedirectUrl: typeof setRedirectUrl;
   loggedIn: boolean;
-  isAdmin: boolean;
 }
 
 const LogIn = ({
@@ -25,7 +24,6 @@ const LogIn = ({
   redirectUrl,
   setRedirectUrl,
   loggedIn,
-  isAdmin,
 }: LogInProps) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -101,7 +99,6 @@ const LogIn = ({
 const mapStateToProps = (state: RootState) => ({
   redirectUrl: state.user.redirectUrl,
   loggedIn: state.user.loggedIn,
-  isAdmin: state.user.isAdmin,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>

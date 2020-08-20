@@ -1,12 +1,26 @@
 import React from "react";
 import { Button, Container, Form } from "react-bootstrap";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router";
+import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
+import { RootState } from "../store";
+import { setRedirectUrl } from "../store/User";
 
-interface SignUpProps {
+interface SignUpProps extends RouteComponentProps<{}> {
   firebase?: Firebase;
+  redirectUrl?: string;
+  setRedirectUrl: typeof setRedirectUrl;
+  loggedIn: boolean;
 }
 
-const SignUp = ({ firebase }: SignUpProps) => {
+const SignUp = ({
+  firebase,
+  redirectUrl,
+  setRedirectUrl,
+  loggedIn,
+  history,
+}: SignUpProps) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
@@ -19,6 +33,12 @@ const SignUp = ({ firebase }: SignUpProps) => {
     }
     firebase?.createUserWithEmailAndPassword(email, password).catch(setError);
   };
+
+  if (loggedIn) {
+    const ru = redirectUrl || "/";
+    setRedirectUrl();
+    history.push(ru);
+  }
 
   return (
     <Container fluid>
@@ -85,11 +105,28 @@ const SignUp = ({ firebase }: SignUpProps) => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Log In
+          Sign Up
         </Button>
       </Form>
     </Container>
   );
 };
 
-export default withFirebase(SignUp);
+const mapStateToProps = (state: RootState) => ({
+  redirectUrl: state.user.redirectUrl,
+  loggedIn: state.user.loggedIn,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      setRedirectUrl,
+    },
+    dispatch
+  );
+
+export default compose(
+  withFirebase,
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps)
+)(SignUp) as any;
