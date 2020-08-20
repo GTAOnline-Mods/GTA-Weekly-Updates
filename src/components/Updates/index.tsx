@@ -78,7 +78,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                       rel="noopener noreferrer"
                     >
                       {update.timeTrial.name}, Par Time{" "}
-                      {update.rcTimeTrial.parTime}
+                      {update.timeTrial.parTime}
                     </a>
                   </p>
                 </div>
