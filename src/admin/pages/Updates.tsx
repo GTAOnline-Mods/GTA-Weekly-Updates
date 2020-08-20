@@ -18,12 +18,8 @@ interface UpdatesProps {
 
 function Updates({ updates, setUpdates, firebase }: UpdatesProps) {
   React.useEffect(() => {
-    async function getUpdates() {
-      const u = await firebase!.getUpdates();
-      setUpdates(u);
-    }
     if (!updates || updates.length === 0) {
-      getUpdates();
+      firebase!.getUpdates().then(setUpdates);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

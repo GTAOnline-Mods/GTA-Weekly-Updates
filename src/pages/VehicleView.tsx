@@ -35,12 +35,8 @@ function VehicleView({
   const [vehicleExists, setVehicleExists] = React.useState(true);
 
   React.useEffect(() => {
-    async function getVehicles() {
-      const v = await firebase!.getVehicles();
-      setVehicles(v);
-    }
     if (!vehicles || vehicles.length === 0) {
-      getVehicles();
+      firebase!.getVehicles().then(setVehicles);
     }
 
     const v = vehicles.filter((v) => v.docRef?.id === match.params.id);

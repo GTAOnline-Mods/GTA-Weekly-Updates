@@ -88,8 +88,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     }
 
     if (!this.props.vehicles.length) {
-      const v = await this.props.firebase!.getVehicles();
-      this.props.setVehicles(v);
+      this.props.firebase!.getVehicles().then(this.props.setVehicles);
     }
   }
 
