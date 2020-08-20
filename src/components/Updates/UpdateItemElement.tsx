@@ -10,14 +10,12 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
   const [show, setShow] = React.useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => {
-    setShow(true);
-  };
+  const handleShow = () => setShow(true);
 
   return (
     <React.Fragment>
       <li onClick={handleShow}>
-        {(item as SaleItem).amount !== undefined
+        {(item as SaleItem).amount
           ? `${(item as SaleItem).amount}% off ${item.name}`
           : item.name}
       </li>
@@ -28,20 +26,34 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
 
         <Modal.Body>
           <p>
-            {(item as SaleItem).amount !== undefined ? (
+            {(item as SaleItem).amount ? (
               <span>
                 <del>GTA$ {item.data?.price.toLocaleString()}</del> GTA${" "}
                 {(
                   item.data?.price *
                   (1 - (item as SaleItem).amount / 100)
                 ).toLocaleString()}
+                {item.data?.tradePrice && (
+                  <span>
+                    <br />
+                    <del>
+                      GTA$ {item.data?.tradePrice.toLocaleString()}
+                    </del>{" "}
+                    GTA${" "}
+                    {(
+                      item.data?.tradePrice *
+                      (1 - (item as SaleItem).amount / 100)
+                    ).toLocaleString()}{" "}
+                    (Trade Price)
+                  </span>
+                )}
               </span>
             ) : (
               <span>GTA$ {item.data?.price.toLocaleString()}</span>
             )}
             {item.data?.shop && (
-              <span className="mt-2">
-                <br/>
+              <span className="pt-2 mt-2">
+                <br />
                 <b>Available at</b> {item.data?.shop}
               </span>
             )}

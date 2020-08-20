@@ -124,7 +124,10 @@ class Firebase {
   };
 
   getVehicles = async () => {
-    const snapshot = await this.db.collection("vehicles").get();
+    const snapshot = await this.db
+      .collection("vehicles")
+      .orderBy("manufacturer")
+      .get();
 
     const v: Vehicle[] = [];
 
