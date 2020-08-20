@@ -8,4 +8,5 @@ export interface Vehicle {
   shop?: string;
   url?: string;
   docRef?: firebase.firestore.DocumentReference;
+  id?: string;
 }
