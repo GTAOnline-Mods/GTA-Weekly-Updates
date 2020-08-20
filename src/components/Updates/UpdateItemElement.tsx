@@ -35,13 +35,27 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
                   item.data?.price *
                   (1 - (item as SaleItem).amount / 100)
                 ).toLocaleString()}
+                {item.data?.tradePrice && (
+                  <span>
+                    <br />
+                    <del>
+                      GTA$ {item.data?.tradePrice.toLocaleString()}
+                    </del>{" "}
+                    GTA${" "}
+                    {(
+                      item.data?.tradePrice *
+                      (1 - (item as SaleItem).amount / 100)
+                    ).toLocaleString()}{" "}
+                    (Trade Price)
+                  </span>
+                )}
               </span>
             ) : (
               <span>GTA$ {item.data?.price.toLocaleString()}</span>
             )}
             {item.data?.shop && (
-              <span className="mt-2">
-                <br/>
+              <span className="pt-2 mt-2">
+                <br />
                 <b>Available at</b> {item.data?.shop}
               </span>
             )}

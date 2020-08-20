@@ -68,6 +68,16 @@ function VehicleView({
             GTA$ {vehicle.price!.toLocaleString()}
           </Col>
         </Row>
+        {vehicle.tradePrice && (
+          <Row className="pb-2">
+            <Col md={4} lg={12}>
+              <b>Trade Price</b>
+            </Col>
+            <Col md={8} lg={12}>
+              GTA$ {vehicle.tradePrice!.toLocaleString()}
+            </Col>
+          </Row>
+        )}
         <Row className="pb-2">
           <Col md={4} lg={12}>
             <b>Available at</b>

@@ -73,10 +73,12 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
   }
 
   setValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = event.target;
+
     this.setState({
       vehicle: {
         ...this.state.vehicle!!,
-        [event.target.name]: event.target.value,
+        [name]: type === "number" ? parseInt(value) : value,
       },
     });
     this.debouncedSave();
@@ -84,7 +86,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
 
   saveVehicle = _.throttle(() => {
     if (this.state.vehicle) {
-      const { docRef, ...v } = this.state.vehicle;
+      const { docRef, id, ...v } = this.state.vehicle;
 
       this.setState({
         loading: true,
@@ -171,13 +173,28 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
               </Form.Row>
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
-                  <Form.Control
-                    placeholder="Price"
-                    name="price"
-                    value={vehicle.price}
-                    onChange={this.setValue}
-                    type="number"
-                  />
+                  <div className="d-flex align-items-center justify-content-between mb-2">
+                    <Form.Label className="m-0 px-4">Price</Form.Label>
+                    <Form.Control
+                      placeholder="Price"
+                      className="w-75"
+                      name="price"
+                      value={vehicle.price}
+                      onChange={this.setValue}
+                      type="number"
+                    />
+                  </div>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <Form.Label className="m-0 px-4">Trade Price</Form.Label>
+                    <Form.Control
+                      placeholder="Trade Price"
+                      className="w-75"
+                      name="tradePrice"
+                      value={vehicle.tradePrice}
+                      onChange={this.setValue}
+                      type="number"
+                    />
+                  </div>
                 </Form.Group>
                 <Col>
                   <Form.Group className="d-flex align-items-center">
