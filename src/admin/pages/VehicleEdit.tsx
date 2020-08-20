@@ -1,7 +1,7 @@
 import firebase from "firebase";
 import _ from "lodash";
 import React from "react";
-import { Col, Container, Form, Image, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Image, Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
@@ -79,10 +79,10 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
         [event.target.name]: event.target.value,
       },
     });
-    this.saveVehicle();
+    this.debouncedSave();
   };
 
-  saveVehicle = _.debounce(() => {
+  saveVehicle = _.throttle(() => {
     if (this.state.vehicle) {
       const { docRef, ...v } = this.state.vehicle;
 
@@ -117,7 +117,9 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
           .catch(console.error);
       }
     }
-  }, 1000);
+  }, 5000);
+
+  debouncedSave = _.debounce(this.saveVehicle, 2000);
 
   render() {
     const { vehicle, vehicleExists, loading } = this.state;
@@ -209,13 +211,16 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
                 </Form.Group>
               </Form.Row>
             </Form>
-            {loading && (
-              <div className="d-flex flex-row-reverse">
+            <div className="d-flex flex-row-reverse">
+              <Button onClick={this.saveVehicle} className="rockstar-yellow">
+                Save
+              </Button>
+              {loading && (
                 <Spinner animation="border" role="status" className="mr-4 mt-2">
                   <span className="sr-only">Loading...</span>
                 </Spinner>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ) : match.params.id && !vehicleExists ? (
           <div>

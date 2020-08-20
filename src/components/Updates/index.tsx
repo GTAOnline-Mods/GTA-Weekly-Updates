@@ -67,6 +67,53 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   <UpdateItemElement key={item.id} item={item} />
                 ))}
               </ul>
+              {update.timeTrial && (
+                <div>
+                  <p>
+                    <b>Time Trial</b>
+                    <br />
+                    <a
+                      href={update.timeTrial.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {update.timeTrial.name}, Par Time{" "}
+                      {update.rcTimeTrial.parTime}
+                    </a>
+                  </p>
+                </div>
+              )}
+              {update.rcTimeTrial && (
+                <div>
+                  <p>
+                    <b>RC Bandito Time Trial</b>
+                    <br />
+                    <a
+                      href={update.rcTimeTrial.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {update.rcTimeTrial.name}, Par Time{" "}
+                      {update.rcTimeTrial.parTime}
+                    </a>
+                  </p>
+                </div>
+              )}
+              {update.premiumRace && (
+                <div>
+                  <p>
+                    <b>Premium Race</b>
+                    <br />
+                    <a
+                      href={update.premiumRace.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {update.premiumRace.name}
+                    </a>
+                  </p>
+                </div>
+              )}
             </Card.Body>
             <Card.Footer>
               <small className="text-muted">
