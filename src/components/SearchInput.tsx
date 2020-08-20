@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Dropdown,
-
-  FormControl,
-  InputGroup
-} from "react-bootstrap";
+import { Button, Dropdown, FormControl, InputGroup } from "react-bootstrap";
 import "./SearchInput.scss";
 
 interface SearchInputOption {
