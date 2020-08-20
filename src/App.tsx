@@ -1,15 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import firebase from "firebase";
 import React from "react";
 import { Container } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Admin from "./admin";
-import Vehicles from "./components/Vehicles";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Updates from "./components/Updates";
+import Vehicles from "./components/Vehicles";
 import Firebase, { withFirebase } from "./Firebase";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
@@ -23,6 +22,7 @@ interface AppProps {
   setLoggedIn: typeof setLoggedIn;
   faqThread?: string;
   loadFaqThread: typeof loadFaqThread;
+  loggedIn: boolean;
   isAdmin: boolean;
   setIsAdmin: typeof setIsAdmin;
   setRedirectUrl: (path?: string) => void;
@@ -33,24 +33,26 @@ function App({
   setLoggedIn,
   faqThread,
   loadFaqThread,
+  loggedIn,
   isAdmin,
+  setIsAdmin,
   setRedirectUrl,
 }: AppProps) {
   React.useEffect(() => {
     loadFaqThread();
-
-    if (firebase?.auth.currentUser !== null) {
-      setLoggedIn(true);
-      firebase
-        ?.getUserDoc(firebase?.auth.currentUser.uid)
-        .then((snapshot: firebase.firestore.DocumentSnapshot | null) => {
-          if (snapshot && snapshot.data()?.admin) {
-            setIsAdmin(true);
-          }
-        });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!loggedIn && firebase?.auth.currentUser) {
+    setLoggedIn(true);
+    firebase
+      ?.getUserDoc(firebase?.auth.currentUser.uid)
+      .then((snapshot: firebase.firestore.DocumentSnapshot | null) => {
+        if (snapshot && snapshot.data()?.admin) {
+          setIsAdmin(true);
+        }
+      });
+  }
 
   return (
     <React.Fragment>
@@ -106,6 +108,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 const mapStateToProps = (state: RootState) => ({
   faqThread: state.reddit.faqThread,
+  loggedIn: state.user.loggedIn,
   isAdmin: state.user.isAdmin,
 });
 
