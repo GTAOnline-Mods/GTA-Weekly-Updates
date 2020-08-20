@@ -193,9 +193,9 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           .catch(console.error);
       }
     }
-  }, 5000);
+  }, 2000);
 
-  debouncedSave = _.debounce(this.saveUpdate, 2000);
+  debouncedSave = _.debounce(this.saveUpdate, 5000);
 
   // tslint:disable-next-line: max-func-body-length
   render() {

@@ -1,7 +1,10 @@
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Col, Container, Image, Row } from "react-bootstrap";
+import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { Vehicle } from "../models/vehicle";
@@ -15,6 +18,7 @@ interface VehicleViewMatch {
 interface VehicleViewProps extends RouteComponentProps<VehicleViewMatch> {
   firebase?: Firebase;
   vehicles: Vehicle[];
+  isAdmin: boolean;
   setVehicles: typeof setVehicles;
 }
 
@@ -25,6 +29,7 @@ function VehicleView({
   vehicles,
   setVehicles,
   match,
+  isAdmin,
 }: VehicleViewProps) {
   const [vehicle, setVehicle] = React.useState<Vehicle | null>(null);
   const [vehicleExists, setVehicleExists] = React.useState(true);
@@ -44,13 +49,25 @@ function VehicleView({
     } else {
       setVehicleExists(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vehicles, match]);
 
   if (vehicle) {
     return (
       <Container fluid>
-        <h2 className="pricedown">{vehicle.manufacturer}</h2>
+        <div className="d-flex justify-content-between">
+          <h2 className="pricedown">{vehicle.manufacturer}</h2>
+          {isAdmin && (
+            <Button
+              variant="link"
+              style={{ color: "black" }}
+              as={Link}
+              to={"/admin/vehicles/edit/" + vehicle.docRef?.id}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </Button>
+          )}
+        </div>
         <h1 className="mb-4">{vehicle.name}</h1>
 
         <Image
@@ -109,6 +126,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 const mapStateToProps = (state: RootState) => ({
   vehicles: state.vehicles.vehicles,
+  isAdmin: state.user.isAdmin,
 });
 
 export default compose(

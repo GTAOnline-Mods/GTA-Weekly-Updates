@@ -54,19 +54,16 @@ function SearchInput({ options, onSelect, multi }: SearchInputProps) {
                   setSearch(event.target.value)
                 }
               />
-              {options
-                .filter((option) =>
-                  search
-                    ? option.label
-                        .toLowerCase()
-                        .indexOf(search.toLowerCase()) !== -1
-                    : true
-                )
-                .map((option, index) => (
-                  <Dropdown.Item key={index} eventKey={option.id}>
-                    {option.label}
-                  </Dropdown.Item>
-                ))}
+              {(search
+                ? options.filter((option) =>
+                    option.label.toLowerCase().includes(search.toLowerCase())
+                  )
+                : options
+              ).map((option, index) => (
+                <Dropdown.Item key={index} eventKey={option.id}>
+                  {option.label}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
         </InputGroup.Prepend>

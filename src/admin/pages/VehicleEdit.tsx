@@ -16,6 +16,7 @@ const shops = [
   "Southern San Andreas Super Autos",
   "Warstock Cache & Carry",
   "Benny's Original Motor Works",
+  "DockTease",
 ];
 
 interface VehicleEditMatch {
@@ -32,6 +33,7 @@ interface VehicleEditProps extends RouteComponentProps<VehicleEditMatch> {
 interface VehicleEditState {
   vehicle?: Vehicle;
   vehicleExists: boolean;
+  vehicleAlreadyExists: boolean;
   loading: boolean;
 }
 
@@ -42,6 +44,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
     this.state = {
       vehicleExists: true,
       loading: false,
+      vehicleAlreadyExists: false,
     };
   }
 
@@ -67,13 +70,22 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
       }
     } else {
       this.setState({
-        vehicle: { name: "" },
+        vehicle: { name: "", shop: shops[0] },
       });
     }
   }
 
   setValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = event.target;
+
+    if (name === "name") {
+      const v = this.props.vehicles.filter((_v) => _v.name === value);
+      if (v.length) {
+        this.setState({
+          vehicleAlreadyExists: true,
+        });
+      }
+    }
 
     this.setState({
       vehicle: {
@@ -120,12 +132,17 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
           .catch(console.error);
       }
     }
-  }, 5000);
+  }, 2000);
 
-  debouncedSave = _.debounce(this.saveVehicle, 2000);
+  debouncedSave = _.debounce(this.saveVehicle, 5000);
 
   render() {
-    const { vehicle, vehicleExists, loading } = this.state;
+    const {
+      vehicle,
+      vehicleExists,
+      loading,
+      vehicleAlreadyExists,
+    } = this.state;
     const { match } = this.props;
 
     return (
@@ -159,6 +176,12 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
                     value={vehicle.name}
                     onChange={this.setValue}
                   />
+                  {vehicleAlreadyExists && (
+                    <Form.Text className="text-danger">
+                      This vehicle name is already in use, make sure the entry
+                      doesn't already exist.
+                    </Form.Text>
+                  )}
                 </Form.Group>
               </Form.Row>
               <Form.Row className="mb-2">
