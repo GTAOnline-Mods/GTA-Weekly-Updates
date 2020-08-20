@@ -11,14 +11,12 @@ interface SignUpProps extends RouteComponentProps<{}> {
   firebase?: Firebase;
   redirectUrl?: string;
   setRedirectUrl: typeof setRedirectUrl;
-  loggedIn: boolean;
 }
 
 const SignUp = ({
   firebase,
   redirectUrl,
   setRedirectUrl,
-  loggedIn,
   history,
 }: SignUpProps) => {
   const [email, setEmail] = React.useState("");
@@ -111,7 +109,6 @@ const SignUp = ({
 
 const mapStateToProps = (state: RootState) => ({
   redirectUrl: state.user.redirectUrl,
-  loggedIn: state.user.loggedIn,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
