@@ -10,6 +10,7 @@ import { setIsAdmin, setLoggedIn } from "../store/User";
 interface HeaderProps {
   firebase?: Firebase;
   loggedIn: boolean;
+  isAdmin: boolean;
   setLoggedIn: typeof setLoggedIn;
   setIsAdmin: typeof setIsAdmin;
 }
@@ -17,6 +18,7 @@ interface HeaderProps {
 function Header({
   firebase,
   loggedIn,
+  isAdmin,
   setLoggedIn,
   setIsAdmin,
 }: HeaderProps) {
@@ -47,9 +49,11 @@ function Header({
         <Nav className="mr-auto"></Nav>
         {loggedIn ? (
           <Nav>
-            <Nav.Link as={Link} to="/admin">
-              Admin
-            </Nav.Link>
+            {isAdmin && (
+              <Nav.Link as={Link} to="/admin">
+                Admin
+              </Nav.Link>
+            )}
             <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
           </Nav>
         ) : (
@@ -75,6 +79,7 @@ function Header({
 
 const mapStateToProps = (state: RootState) => ({
   loggedIn: state.user.loggedIn,
+  isAdmin: state.user.isAdmin,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) =>

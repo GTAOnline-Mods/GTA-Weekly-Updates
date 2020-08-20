@@ -24,7 +24,7 @@ function UpdateItemEditor({
         {sale && (
           <FormControl
             value={(item as SaleItem).amount}
-            style={{ flex: "100000", maxWidth: "80px" }}
+            style={{ maxWidth: "80px" }}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setItem({
                 ...item,

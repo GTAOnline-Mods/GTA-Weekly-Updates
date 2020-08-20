@@ -1,5 +1,11 @@
 @import "../../index.scss";
 
+.react-datepicker-wrapper {
+  .react-datepicker__input-container > input {
+    @extend .form-control;
+  }
+}
+
 .react-datepicker-popper {
   z-index: 1000;
 

@@ -104,6 +104,7 @@ class Firebase {
 
     for (const doc of snapshot!.docs) {
       const update = {
+        ...doc.data(),
         podium: doc.data()!.podium && (await getItem(doc.data()!.podium)),
         new: await getItems(doc.data()!.new),
         sale: await getSales(doc.data()!.sale),

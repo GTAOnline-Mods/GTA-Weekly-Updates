@@ -48,7 +48,7 @@ code {
 }
 
 .yellow-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -76,4 +76,10 @@ h1 {
   color: black !important;
   text-shadow: -0.05rem 0 white, 0 0.05rem white, 0.05rem 0 white,
     0 -0.05rem white;
+}
+
+.input-group {
+  .form-control {
+    flex: 10000;
+  }
 }
