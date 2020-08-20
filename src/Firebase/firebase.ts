@@ -66,8 +66,12 @@ class Firebase {
     return null;
   };
 
-  getUpdates = async () => {
-    const snapshot = await this.db.collection("updates").get();
+  getUpdates = async (limit: number = 15) => {
+    const snapshot = await this.db
+      .collection("updates")
+      .orderBy("date", "desc")
+      .limit(limit)
+      .get();
 
     const getItem = async (item: app.firestore.DocumentReference) => {
       const s = await item.get();

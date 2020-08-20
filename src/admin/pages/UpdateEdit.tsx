@@ -2,6 +2,7 @@ import firebase from "firebase";
 import _ from "lodash";
 import React from "react";
 import {
+  Button,
   Col,
   Container,
   Form,
@@ -98,7 +99,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         [name]: value,
       },
     });
-    this.saveUpdate();
+    this.debouncedSave();
   };
 
   setDate = (date: Date) => {
@@ -108,7 +109,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         date,
       },
     });
-    this.saveUpdate();
+    this.debouncedSave();
   };
 
   setItem = (key: keyof Update, item: UpdateItem | SaleItem) => {
@@ -123,7 +124,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         ],
       },
     });
-    this.saveUpdate();
+    this.debouncedSave();
   };
 
   deleteItem = (key: keyof Update, item: UpdateItem | SaleItem) => {
@@ -137,17 +138,17 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         ],
       },
     });
-    this.saveUpdate();
+    this.debouncedSave();
   };
 
-  saveUpdate = _.debounce(() => {
+  saveUpdate = _.throttle(() => {
     if (this.state.update) {
       const { docRef, ...u } = this.state.update;
 
       const update = {
         ...u,
         new: [...u.new.map((i) => i.docRef)],
-        podium: u.podium?.docRef,
+        podium: u.podium?.docRef || null,
         sale: [...u.sale.map((i) => ({ item: i.docRef, amount: i.amount }))],
         twitchPrime: [
           ...u.twitchPrime.map((i) => ({
@@ -192,7 +193,9 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           .catch(console.error);
       }
     }
-  }, 1000);
+  }, 5000);
+
+  debouncedSave = _.debounce(this.saveUpdate, 2000);
 
   // tslint:disable-next-line: max-func-body-length
   render() {
@@ -407,13 +410,17 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                 </Form.Group>
               </Form.Row>
             </Form>
-            {loading && (
-              <div className="d-flex flex-row-reverse">
+
+            <div className="d-flex flex-row-reverse">
+              <Button onClick={this.debouncedSave} className="rockstar-yellow">
+                Save
+              </Button>
+              {loading && (
                 <Spinner animation="border" role="status" className="mr-4 mt-2">
                   <span className="sr-only">Loading...</span>
                 </Spinner>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ) : match.params.id && !updateExists ? (
           <div>
