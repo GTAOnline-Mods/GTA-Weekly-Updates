@@ -131,6 +131,7 @@ class Firebase {
       v.push({
         ...(doc.data() as Vehicle),
         docRef: doc.ref,
+        id: doc.ref.id,
       });
     }
 

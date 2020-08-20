@@ -108,6 +108,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
             const v = {
               ...this.state.vehicle!!,
               docRef: ref,
+              id: ref.id,
             };
             this.setState({
               vehicle: v,

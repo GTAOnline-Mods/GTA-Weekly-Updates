@@ -200,7 +200,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
   // tslint:disable-next-line: max-func-body-length
   render() {
     const { update, updateExists, loading } = this.state;
-    const { match } = this.props;
+    const { match, vehicles } = this.props;
 
     return (
       <Container fluid>
@@ -217,7 +217,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                 <Form.Group as={Col} md="6" sm="12">
                   <Form.Label>Podium</Form.Label>
                   <SearchInput
-                    options={this.props.vehicles.map((v) => ({
+                    options={vehicles.map((v) => ({
                       label: `${v.manufacturer} ${v.name}`,
                       value: v,
                       id: v.docRef!.id,
@@ -231,7 +231,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>New</Form.Label>
                   <SearchInput
                     multi
-                    options={this.props.vehicles.map((v) => ({
+                    options={vehicles.map((v) => ({
                       label: v.name,
                       value: v,
                       id: v.docRef!.id,
@@ -255,7 +255,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Sale</Form.Label>
                   <SearchInput
                     multi
-                    options={this.props.vehicles.map((v) => ({
+                    options={vehicles.map((v) => ({
                       label: `${v.manufacturer} ${v.name}`,
                       value: v,
                       id: v.docRef!.id,
@@ -280,7 +280,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Twitch Prime</Form.Label>
                   <SearchInput
                     multi
-                    options={this.props.vehicles.map((v) => ({
+                    options={vehicles.map((v) => ({
                       label: `${v.manufacturer} ${v.name}`,
                       value: v,
                       id: v.docRef!.id,
@@ -412,7 +412,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
             </Form>
 
             <div className="d-flex flex-row-reverse">
-              <Button onClick={this.debouncedSave} className="rockstar-yellow">
+              <Button onClick={this.saveUpdate} className="rockstar-yellow">
                 Save
               </Button>
               {loading && (
