@@ -5,6 +5,7 @@ export default interface Update {
   podium?: UpdateItem;
   new: UpdateItem[];
   sale: SaleItem[];
+  targetedSale: SaleItem[];
   date: Date;
   twitchPrime: SaleItem[];
   docRef?: firebase.firestore.DocumentReference;

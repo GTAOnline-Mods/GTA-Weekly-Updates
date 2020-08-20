@@ -30,7 +30,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
           u1.date === u2.date ? 0 : u1.date < u2.date ? 1 : -1
         )
         .map((update: Update, index: number) => (
-          <Card key={index}>
+          <Card key={index} style={{ minWidth: "300px" }}>
             <Card.Body>
               <Card.Title className="pb-2">Weekly Update</Card.Title>
               {update.podium && (
@@ -45,24 +45,46 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   </ul>
                 </span>
               )}
-              {update.new.length ? <b>New Content</b> : ""}
-              <ul>
-                {update.new.map((item: UpdateItem) => (
-                  <UpdateItemElement key={item.id} item={item} />
-                ))}
-              </ul>
-              {update.sale.length ? <b>Discounts</b> : ""}
-              <ul>
-                {update.sale.map((item: SaleItem) => (
-                  <UpdateItemElement key={item.id} item={item} />
-                ))}
-              </ul>
-              {update.twitchPrime.length ? <b>Twitch Prime Bonuses</b> : ""}
-              <ul>
-                {update.twitchPrime.map((item: SaleItem) => (
-                  <UpdateItemElement key={item.id} item={item} />
-                ))}
-              </ul>
+              {update.new.length !== 0 && (
+                <React.Fragment>
+                  <b>New Content</b>
+                  <ul>
+                    {update.new.map((item: UpdateItem) => (
+                      <UpdateItemElement key={item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
+              {update.sale.length !== 0 && (
+                <React.Fragment>
+                  <b>Discounts</b>
+                  <ul>
+                    {update.sale.map((item: SaleItem) => (
+                      <UpdateItemElement key={item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
+              {update.twitchPrime.length !== 0 && (
+                <React.Fragment>
+                  <b>Twitch Prime Bonuses</b>
+                  <ul>
+                    {update.twitchPrime.map((item: SaleItem) => (
+                      <UpdateItemElement key={item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
+              {update.targetedSale.length !== 0 && (
+                <React.Fragment>
+                  <b>Targeted Sales</b>
+                  <ul>
+                    {update.targetedSale.map((item: SaleItem) => (
+                      <UpdateItemElement key={item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
               {update.timeTrial && (
                 <div>
                   <p>

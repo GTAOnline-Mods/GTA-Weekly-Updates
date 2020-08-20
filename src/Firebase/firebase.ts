@@ -112,6 +112,7 @@ class Firebase {
         podium: doc.data()!.podium && (await getItem(doc.data()!.podium)),
         new: await getItems(doc.data()!.new),
         sale: await getSales(doc.data()!.sale),
+        targetedSale: await getSales(doc.data()!.targetedSale),
         twitchPrime: await getSales(doc.data()!.twitchPrime),
         date: new Date(doc.data()!.date.seconds * 1000),
         docRef: doc.ref,

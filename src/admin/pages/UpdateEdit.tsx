@@ -80,6 +80,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         update: {
           new: [],
           sale: [],
+          targetedSale: [],
           twitchPrime: [],
           date: new Date(),
         },
@@ -152,6 +153,12 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         sale: [...u.sale.map((i) => ({ item: i.docRef, amount: i.amount }))],
         twitchPrime: [
           ...u.twitchPrime.map((i) => ({
+            item: i.docRef,
+            amount: i.amount,
+          })),
+        ],
+        targetedSale: [
+          ...u.targetedSale.map((i) => ({
             item: i.docRef,
             amount: i.amount,
           })),
@@ -300,6 +307,36 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                         key={i.docRef!.id}
                         setItem={(item) => this.setItem("twitchPrime", item)}
                         deleteItem={() => this.deleteItem("twitchPrime", i)}
+                      />
+                    ))}
+                  </ListGroup>
+                </Form.Group>
+              </Form.Row>
+              <Form.Row className="my-2">
+                <Form.Group as={Col} md="6" sm="12">
+                  <Form.Label>Targeted Sales</Form.Label>
+                  <SearchInput
+                    multi
+                    options={vehicles.map((v) => ({
+                      label: `${v.manufacturer} ${v.name}`,
+                      value: v,
+                      id: v.docRef!.id,
+                    }))}
+                    onSelect={(option) =>
+                      this.setItem("targetedSale", {
+                        ...option.value,
+                        amount: 10,
+                      })
+                    }
+                  />
+                  <ListGroup className="mt-2">
+                    {this.state.update?.targetedSale?.map((i) => (
+                      <UpdateItemEditor
+                        item={i}
+                        sale
+                        key={i.docRef!.id}
+                        setItem={(item) => this.setItem("targetedSale", item)}
+                        deleteItem={() => this.deleteItem("targetedSale", i)}
                       />
                     ))}
                   </ListGroup>
