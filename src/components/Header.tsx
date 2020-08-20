@@ -46,32 +46,32 @@ function Header({
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className="mr-auto"></Nav>
-        {loggedIn ? (
-          <Nav>
-            {isAdmin && (
-              <Nav.Link as={Link} to="/admin">
-                Admin
-              </Nav.Link>
-            )}
-            <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
-          </Nav>
-        ) : (
-          <Nav>
-            <Nav.Link as={Link} to="/vehicles">
-              Vehicles
-            </Nav.Link>
+        <Nav className="mr-auto">
+          <Nav.Link as={Link} to="/vehicles">
+            Vehicles
+          </Nav.Link>
+        </Nav>
+        <Nav>
+          {loggedIn && isAdmin && (
             <Nav.Link as={Link} to="/admin">
               Admin
             </Nav.Link>
-            <Nav.Link as={Link} to="/login">
-              Log In
-            </Nav.Link>
-            <Nav.Link as={Link} eventKey={2} to="/sign-up">
-              Sign Up
-            </Nav.Link>
-          </Nav>
-        )}
+          )}
+          {loggedIn ? (
+            <React.Fragment>
+              <Nav.Link onClick={signOut}>Sign Out</Nav.Link>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Nav.Link as={Link} to="/login">
+                Log In
+              </Nav.Link>
+              <Nav.Link as={Link} eventKey={2} to="/sign-up">
+                Sign Up
+              </Nav.Link>
+            </React.Fragment>
+          )}
+        </Nav>
       </Navbar.Collapse>
     </Navbar>
   );
