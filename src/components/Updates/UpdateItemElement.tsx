@@ -1,3 +1,5 @@
+import { faEye, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Image, Modal } from "react-bootstrap";
 import { SaleItem, UpdateItem } from "../../models/update";
@@ -17,7 +19,8 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
       <li onClick={handleShow}>
         {(item as SaleItem).amount
           ? `${(item as SaleItem).amount}% off ${item.name}`
-          : item.name}
+          : item.name}{" "}
+        <FontAwesomeIcon icon={faEye} />
       </li>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -28,20 +31,17 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
           <p>
             {(item as SaleItem).amount ? (
               <span>
-                <del>GTA$ {item.data?.price.toLocaleString()}</del> GTA${" "}
+                <del>GTA$ {item.price.toLocaleString()}</del> GTA${" "}
                 {(
-                  item.data?.price *
+                  item.price *
                   (1 - (item as SaleItem).amount / 100)
                 ).toLocaleString()}
-                {item.data?.tradePrice && (
+                {item.tradePrice && (
                   <span>
                     <br />
-                    <del>
-                      GTA$ {item.data?.tradePrice.toLocaleString()}
-                    </del>{" "}
-                    GTA${" "}
+                    <del>GTA$ {item.tradePrice.toLocaleString()}</del> GTA${" "}
                     {(
-                      item.data?.tradePrice *
+                      item.tradePrice *
                       (1 - (item as SaleItem).amount / 100)
                     ).toLocaleString()}{" "}
                     (Trade Price)
@@ -49,22 +49,27 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
                 )}
               </span>
             ) : (
-              <span>GTA$ {item.data?.price.toLocaleString()}</span>
+              <span>GTA$ {item.price.toLocaleString()}</span>
             )}
-            {item.data?.shop && (
+            {item.shop && (
               <span className="pt-2 mt-2">
                 <br />
-                <b>Available at</b> {item.data?.shop}
+                <b>Available at</b> {item.shop}
               </span>
             )}
           </p>
-          {item.data?.img && (
+          {item.img && (
             <Image
-              src={item.data?.img}
+              src={item.img}
               className="mt-2"
               thumbnail
               style={{ maxHeight: "150px" }}
             />
+          )}
+          {item.url && (
+            <Button variant="link" href={item.url} target="_blank">
+              <FontAwesomeIcon icon={faExternalLinkAlt} />
+            </Button>
           )}
         </Modal.Body>
 
