@@ -1,3 +1,5 @@
+import { faEye, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Image, Modal } from "react-bootstrap";
 import { SaleItem, UpdateItem } from "../../models/update";
@@ -17,7 +19,8 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
       <li onClick={handleShow}>
         {(item as SaleItem).amount
           ? `${(item as SaleItem).amount}% off ${item.name}`
-          : item.name}
+          : item.name}{" "}
+        <FontAwesomeIcon icon={faEye} />
       </li>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -36,10 +39,7 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
                 {item.tradePrice && (
                   <span>
                     <br />
-                    <del>
-                      GTA$ {item.tradePrice.toLocaleString()}
-                    </del>{" "}
-                    GTA${" "}
+                    <del>GTA$ {item.tradePrice.toLocaleString()}</del> GTA${" "}
                     {(
                       item.tradePrice *
                       (1 - (item as SaleItem).amount / 100)
@@ -65,6 +65,11 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
               thumbnail
               style={{ maxHeight: "150px" }}
             />
+          )}
+          {item.url && (
+            <Button variant="link" href={item.url} target="_blank">
+              <FontAwesomeIcon icon={faExternalLinkAlt} />
+            </Button>
           )}
         </Modal.Body>
 

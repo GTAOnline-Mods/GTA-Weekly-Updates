@@ -1,6 +1,8 @@
 // eslint-disable react-hooks/exhaustive-deps
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Card, CardDeck } from "react-bootstrap";
+import { Button, Card, CardDeck } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
@@ -30,9 +32,20 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
           u1.date === u2.date ? 0 : u1.date < u2.date ? 1 : -1
         )
         .map((update: Update, index: number) => (
-          <Card key={index} style={{ minWidth: "300px" }}>
+          <Card key={index} style={{ minWidth: "300px" }} className="mb-2">
             <Card.Body>
-              <Card.Title className="pb-2">Weekly Update</Card.Title>
+              <Card.Title className="pb-2 d-flex justify-content-between">
+                <span>Weekly Update</span>
+                {update.redditThread && (
+                  <Button
+                    variant="link"
+                    href={update.redditThread}
+                    target="_blank"
+                  >
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  </Button>
+                )}
+              </Card.Title>
               {update.podium && (
                 <span>
                   <b>Podium Vehicle</b>

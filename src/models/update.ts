@@ -9,6 +9,7 @@ export default interface Update {
   date: Date;
   twitchPrime: SaleItem[];
   docRef?: firebase.firestore.DocumentReference;
+  redditThread?: string;
 }
 
 export interface SaleItem extends UpdateItem {
