@@ -39,7 +39,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   <br />
                   <ul>
                     <UpdateItemElement
-                      key={update.podium.id}
+                      key={update.podium.item.id}
                       item={update.podium}
                     />
                   </ul>
@@ -50,7 +50,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   <b>New Content</b>
                   <ul>
                     {update.new.map((item: UpdateItem) => (
-                      <UpdateItemElement key={item.id} item={item} />
+                      <UpdateItemElement key={item.item.id} item={item} />
                     ))}
                   </ul>
                 </React.Fragment>
@@ -60,7 +60,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   <b>Discounts</b>
                   <ul>
                     {update.sale.map((item: SaleItem) => (
-                      <UpdateItemElement key={item.id} item={item} />
+                      <UpdateItemElement key={item.item.id} item={item} />
                     ))}
                   </ul>
                 </React.Fragment>
@@ -70,7 +70,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   <b>Twitch Prime Bonuses</b>
                   <ul>
                     {update.twitchPrime.map((item: SaleItem) => (
-                      <UpdateItemElement key={item.id} item={item} />
+                      <UpdateItemElement key={item.item.id} item={item} />
                     ))}
                   </ul>
                 </React.Fragment>
@@ -80,7 +80,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   <b>Targeted Sales</b>
                   <ul>
                     {update.targetedSale.map((item: SaleItem) => (
-                      <UpdateItemElement key={item.id} item={item} />
+                      <UpdateItemElement key={item.item.id} item={item} />
                     ))}
                   </ul>
                 </React.Fragment>

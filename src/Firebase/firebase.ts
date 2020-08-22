@@ -30,7 +30,9 @@ class Firebase {
   }
 
   createUserWithEmailAndPassword = (email: string, password: string) =>
-    this.auth.createUserWithEmailAndPassword(email, password).catch(console.error);
+    this.auth
+      .createUserWithEmailAndPassword(email, password)
+      .catch(console.error);
 
   signInWithEmailAndPassword = async (email: string, password: string) => {
     try {
@@ -41,8 +43,7 @@ class Firebase {
     }
   };
 
-  signOut = () =>
-    this.auth.signOut().catch(console.error);
+  signOut = () => this.auth.signOut().catch(console.error);
 
   resetPassword = (email: string) =>
     this.auth.sendPasswordResetEmail(email).catch(console.error);
@@ -67,13 +68,13 @@ class Firebase {
 
     const getItem = async (item: app.firestore.DocumentReference) => {
       const s = await item.get();
+      const { manufacturer, ...i } = s.data()!;
       return {
+        ...i,
         name: s.data()!.manufacturer
           ? `${s.data()!.manufacturer} ${s.data()!.name}`
           : s.data()!.name,
-        docRef: item,
-        id: item.id,
-        data: s.data()!,
+        item,
       };
     };
 
@@ -96,23 +97,22 @@ class Firebase {
           )
         : [];
 
-    const u: Update[] = [];
-
-    for (const doc of snapshot!.docs) {
-      const update = {
-        ...doc.data(),
-        podium: doc.data()!.podium && (await getItem(doc.data()!.podium)),
+    for (let doc of snapshot!.docs) {
+      doc.ref.set({
+        ...doc.data()!,
+        podium: doc.data()!.podium && (await getItem(doc.data()!.podium.item)),
         new: await getItems(doc.data()!.new),
         sale: await getSales(doc.data()!.sale),
         targetedSale: await getSales(doc.data()!.targetedSale),
         twitchPrime: await getSales(doc.data()!.twitchPrime),
-        date: new Date(doc.data()!.date.seconds * 1000),
-        docRef: doc.ref,
-      };
-      u.push(update);
+      });
     }
 
-    return u;
+    return snapshot!.docs.map((doc) => ({
+      ...(doc.data() as Update),
+      date: new Date(doc.data()!.date.seconds * 1000),
+      docRef: doc.ref,
+    }));
   };
 
   getVehicles = async () => {
@@ -121,17 +121,10 @@ class Firebase {
       .orderBy("manufacturer")
       .get();
 
-    const v: Vehicle[] = [];
-
-    for (const doc of snapshot!.docs) {
-      v.push({
-        ...(doc.data() as Vehicle),
-        docRef: doc.ref,
-        id: doc.ref.id,
-      });
-    }
-
-    return v;
+    return snapshot!.docs.map((doc) => ({
+      ...(doc.data() as Vehicle),
+      docRef: doc.ref,
+    }));
   };
 }
 

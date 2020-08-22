@@ -16,8 +16,12 @@ export interface SaleItem extends UpdateItem {
 }
 
 export interface UpdateItem {
+  [name: string]: any;
   name: string;
-  id: string;
-  docRef: firebase.firestore.DocumentReference;
-  data?: firebase.firestore.DocumentData;
+  price: number;
+  tradePrice: number;
+  img?: string;
+  shop?: string;
+  item: firebase.firestore.DocumentReference;
+  url?: string;
 }

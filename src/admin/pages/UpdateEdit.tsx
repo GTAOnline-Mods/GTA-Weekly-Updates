@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -118,7 +118,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         ...this.state.update!,
         [key]: [
           ...this.state.update![key].filter(
-            (i: UpdateItem) => item.id !== i.id
+            (i: UpdateItem) => item.item.id !== i.item.id
           ),
           item,
         ],
@@ -133,7 +133,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         ...this.state.update!,
         [key]: [
           ...this.state.update![key].filter(
-            (i: UpdateItem) => item.id !== i.id
+            (i: UpdateItem) => item.item.id !== i.item.id
           ),
         ],
       },
@@ -147,21 +147,6 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
 
       const update = {
         ...u,
-        new: [...u.new.map((i) => i.docRef)],
-        podium: u.podium?.docRef || null,
-        sale: [...u.sale.map((i) => ({ item: i.docRef, amount: i.amount }))],
-        twitchPrime: [
-          ...u.twitchPrime.map((i) => ({
-            item: i.docRef,
-            amount: i.amount,
-          })),
-        ],
-        targetedSale: [
-          ...u.targetedSale.map((i) => ({
-            item: i.docRef,
-            amount: i.amount,
-          })),
-        ],
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
 
@@ -248,7 +233,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                     {this.state.update?.new?.map((i) => (
                       <UpdateItemEditor
                         item={i}
-                        key={i.docRef!.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("new", item)}
                         deleteItem={() => this.deleteItem("new", i)}
                       />
@@ -275,7 +260,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <UpdateItemEditor
                         item={i}
                         sale
-                        key={i.docRef!.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("sale", item)}
                         deleteItem={() => this.deleteItem("sale", i)}
                       />
@@ -303,7 +288,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <UpdateItemEditor
                         item={i}
                         sale
-                        key={i.docRef!.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("twitchPrime", item)}
                         deleteItem={() => this.deleteItem("twitchPrime", i)}
                       />
@@ -333,7 +318,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <UpdateItemEditor
                         item={i}
                         sale
-                        key={i.docRef!.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("targetedSale", item)}
                         deleteItem={() => this.deleteItem("targetedSale", i)}
                       />

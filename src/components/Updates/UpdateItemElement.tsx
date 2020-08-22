@@ -28,20 +28,20 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
           <p>
             {(item as SaleItem).amount ? (
               <span>
-                <del>GTA$ {item.data?.price.toLocaleString()}</del> GTA${" "}
+                <del>GTA$ {item.price.toLocaleString()}</del> GTA${" "}
                 {(
-                  item.data?.price *
+                  item.price *
                   (1 - (item as SaleItem).amount / 100)
                 ).toLocaleString()}
-                {item.data?.tradePrice && (
+                {item.tradePrice && (
                   <span>
                     <br />
                     <del>
-                      GTA$ {item.data?.tradePrice.toLocaleString()}
+                      GTA$ {item.tradePrice.toLocaleString()}
                     </del>{" "}
                     GTA${" "}
                     {(
-                      item.data?.tradePrice *
+                      item.tradePrice *
                       (1 - (item as SaleItem).amount / 100)
                     ).toLocaleString()}{" "}
                     (Trade Price)
@@ -49,18 +49,18 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
                 )}
               </span>
             ) : (
-              <span>GTA$ {item.data?.price.toLocaleString()}</span>
+              <span>GTA$ {item.price.toLocaleString()}</span>
             )}
-            {item.data?.shop && (
+            {item.shop && (
               <span className="pt-2 mt-2">
                 <br />
-                <b>Available at</b> {item.data?.shop}
+                <b>Available at</b> {item.shop}
               </span>
             )}
           </p>
-          {item.data?.img && (
+          {item.img && (
             <Image
-              src={item.data?.img}
+              src={item.img}
               className="mt-2"
               thumbnail
               style={{ maxHeight: "150px" }}

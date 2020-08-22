@@ -98,7 +98,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
 
   saveVehicle = _.throttle(() => {
     if (this.state.vehicle) {
-      const { docRef, id, ...v } = this.state.vehicle;
+      const { docRef, ...v } = this.state.vehicle;
 
       this.setState({
         loading: true,
