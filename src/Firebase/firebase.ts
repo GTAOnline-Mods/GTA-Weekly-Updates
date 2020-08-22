@@ -66,48 +66,6 @@ class Firebase {
       .limit(limit)
       .get();
 
-    const getItem = async (item: app.firestore.DocumentReference) => {
-      const s = await item.get();
-      const { manufacturer, ...i } = s.data()!;
-      return {
-        ...i,
-        name: s.data()!.manufacturer
-          ? `${s.data()!.manufacturer} ${s.data()!.name}`
-          : s.data()!.name,
-        item,
-      };
-    };
-
-    const getItems = async (items?: app.firestore.DocumentData[]) =>
-      items
-        ? Promise.all(
-            items
-              .filter((item) => item != null)
-              .map((item) => getItem(item.item || item))
-          )
-        : [];
-
-    const getSales = async (sale?: app.firestore.DocumentData[]) =>
-      sale
-        ? Promise.all(
-            sale.map(async (item) => ({
-              ...(await getItem(item.item)),
-              amount: item.amount,
-            }))
-          )
-        : [];
-
-    for (let doc of snapshot!.docs) {
-      doc.ref.set({
-        ...doc.data()!,
-        podium: doc.data()!.podium && (await getItem(doc.data()!.podium.item)),
-        new: await getItems(doc.data()!.new),
-        sale: await getSales(doc.data()!.sale),
-        targetedSale: await getSales(doc.data()!.targetedSale),
-        twitchPrime: await getSales(doc.data()!.twitchPrime),
-      });
-    }
-
     return snapshot!.docs.map((doc) => ({
       ...(doc.data() as Update),
       date: new Date(doc.data()!.date.seconds * 1000),
