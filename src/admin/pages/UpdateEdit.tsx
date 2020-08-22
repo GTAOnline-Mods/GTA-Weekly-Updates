@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -145,8 +145,22 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     if (this.state.update) {
       const { docRef, ...u } = this.state.update;
 
+      const mapItem = (item: Vehicle) => {
+        const { docRef, ..._i } = item;
+
+        return {
+          ..._i,
+          item: item.docRef,
+        };
+      };
+
       const update = {
         ...u,
+        new: [...u.new.map(mapItem)],
+        podium: u.podium?.docRef || null,
+        sale: [...u.sale.map(mapItem)],
+        twitchPrime: [...u.twitchPrime.map(mapItem)],
+        targetedSale: [...u.targetedSale.map(mapItem)],
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
 
