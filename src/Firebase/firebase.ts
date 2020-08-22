@@ -30,9 +30,7 @@ class Firebase {
   }
 
   createUserWithEmailAndPassword = (email: string, password: string) =>
-    this.auth.createUserWithEmailAndPassword(email, password).catch((error) => {
-      throw error;
-    });
+    this.auth.createUserWithEmailAndPassword(email, password).catch(console.error);
 
   signInWithEmailAndPassword = async (email: string, password: string) => {
     try {
@@ -44,19 +42,13 @@ class Firebase {
   };
 
   signOut = () =>
-    this.auth.signOut().catch((error) => {
-      console.error(error);
-    });
+    this.auth.signOut().catch(console.error);
 
   resetPassword = (email: string) =>
-    this.auth.sendPasswordResetEmail(email).catch((error) => {
-      console.error(error);
-    });
+    this.auth.sendPasswordResetEmail(email).catch(console.error);
 
   updatePassword = (password: string) =>
-    this.auth.currentUser?.updatePassword(password).catch((error) => {
-      console.error(error);
-    });
+    this.auth.currentUser?.updatePassword(password).catch(console.error);
 
   getUserDoc = async (userId: string) => {
     const snapshot = await this.db.collection("users").doc(userId).get();
