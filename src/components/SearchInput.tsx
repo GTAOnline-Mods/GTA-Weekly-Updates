@@ -10,14 +10,15 @@ interface SearchInputOption {
 
 interface SearchInputProps {
   options: SearchInputOption[];
+  selected?: SearchInputOption;
   onSelect?: (option: SearchInputOption) => void;
   multi?: boolean;
 }
 
-function SearchInput({ options, onSelect, multi }: SearchInputProps) {
+function SearchInput({ options, onSelect, multi, selected }: SearchInputProps) {
   const [search, setSearch] = React.useState("");
   const [selection, setSelection] = React.useState<SearchInputOption | null>(
-    null
+    selected || null
   );
 
   return (

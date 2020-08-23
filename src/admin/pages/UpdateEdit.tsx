@@ -9,12 +9,13 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
+import Snoowrap from "snoowrap";
 import SearchInput from "../../components/SearchInput";
 import Firebase, { withFirebase } from "../../Firebase";
 import Update, { SaleItem, UpdateItem } from "../../models/update";
@@ -36,6 +37,7 @@ interface UpdateEditProps extends RouteComponentProps<UpdateEditMatch> {
   setUpdates: typeof setUpdates;
   vehicles: Vehicle[];
   setVehicles: typeof setVehicles;
+  redditClient: Snoowrap;
 }
 
 interface UpdateEditState {
@@ -145,28 +147,46 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     if (this.state.update) {
       const { docRef, ...u } = this.state.update;
 
-      const mapItem = (item: Vehicle) => {
-        const { docRef, ..._i } = item;
+      const mapItem = (_item: Vehicle | UpdateItem) => {
+        const { docRef, manufacturer, ..._i } = _item;
+        const item = (_item as UpdateItem).item;
 
         return {
           ..._i,
-          item: item.docRef,
+          name: manufacturer ? `${manufacturer} ${_item.name}` : _item.name,
+          item: docRef || item,
         };
       };
 
       const update = {
         ...u,
         new: [...u.new.map(mapItem)],
-        podium: u.podium?.docRef || null,
+        podium: u.podium ? mapItem(u.podium) : null,
         sale: [...u.sale.map(mapItem)],
         twitchPrime: [...u.twitchPrime.map(mapItem)],
         targetedSale: [...u.targetedSale.map(mapItem)],
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
 
+      console.log(update);
+
       this.setState({
         loading: true,
       });
+
+      if (this.props.redditClient) {
+        const sub = this.props.redditClient.getSubreddit("gtaonline");
+
+        console.log(u.date.toLocaleDateString("en-us"));
+        console.log(
+          "**New Content**\n",
+          u.new.map(
+            (item) => `${item.amount}% off ${item.manufacturer} ${item.name}`
+          )
+        );
+
+        // await sub.submitSelfPost(`${}`)
+      }
 
       if (docRef) {
         docRef!
@@ -227,6 +247,13 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       value: v,
                       id: v.docRef!.id,
                     }))}
+                    selected={
+                      update.podium && {
+                        label: update.podium?.name,
+                        value: update.podium,
+                        id: update.podium.item.id,
+                      }
+                    }
                     onSelect={(option) => {
                       this.setValue("podium", option.value);
                     }}
@@ -480,6 +507,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 const mapStateToProps = (state: RootState) => ({
   updates: state.updates.updates,
   vehicles: state.vehicles.vehicles,
+  redditClient: state.reddit.redditClient,
 });
 
 export default compose(
