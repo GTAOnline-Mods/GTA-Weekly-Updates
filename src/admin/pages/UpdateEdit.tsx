@@ -147,17 +147,6 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     if (this.state.update) {
       const { docRef, ...u } = this.state.update;
 
-      const mapItem = (_item: Vehicle | UpdateItem) => {
-        const { docRef, manufacturer, ..._i } = _item;
-        const item = (_item as UpdateItem).item;
-
-        return {
-          ..._i,
-          name: manufacturer ? `${manufacturer} ${_item.name}` : _item.name,
-          item: docRef || item,
-        };
-      };
-
       const update = {
         ...u,
         date: firebase.firestore.Timestamp.fromDate(u.date),
