@@ -10,6 +10,19 @@ export default interface Update {
   twitchPrime: SaleItem[];
   docRef?: firebase.firestore.DocumentReference;
   redditThread?: string;
+  premiumRace?: Race;
+  timeTrial?: TimeTrial;
+  rcTimeTrial?: TimeTrial;
+}
+
+export interface Race {
+  name: string;
+  url?: string;
+}
+
+export interface TimeTrial extends Race {
+  name: string;
+  parTime: string;
 }
 
 export interface SaleItem extends UpdateItem {
