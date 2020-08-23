@@ -39,14 +39,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                 {update.redditThread && (
                   <Button
                     variant="link"
-<<<<<<< HEAD
-                    href={
-                      "https://reddit.com/r/gtaonline/comments/" +
-                      update.redditThread
-                    }
-=======
                     href={update.redditThread}
->>>>>>> admin/updates
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faExternalLinkAlt} />
