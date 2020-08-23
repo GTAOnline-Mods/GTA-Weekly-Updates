@@ -147,24 +147,8 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     if (this.state.update) {
       const { docRef, ...u } = this.state.update;
 
-      const mapItem = (_item: Vehicle | UpdateItem) => {
-        const { docRef, manufacturer, ..._i } = _item;
-        const item = (_item as UpdateItem).item;
-
-        return {
-          ..._i,
-          name: manufacturer ? `${manufacturer} ${_item.name}` : _item.name,
-          item: docRef || item,
-        };
-      };
-
       const update = {
         ...u,
-        new: [...u.new.map(mapItem)],
-        podium: u.podium ? mapItem(u.podium) : null,
-        sale: [...u.sale.map(mapItem)],
-        twitchPrime: [...u.twitchPrime.map(mapItem)],
-        targetedSale: [...u.targetedSale.map(mapItem)],
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
 
@@ -227,6 +211,16 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     const { update, updateExists, loading } = this.state;
     const { match, vehicles } = this.props;
 
+    const updateVehicles = vehicles.map(v => {
+      const { docRef, manufacturer, ...vehicle } = v;
+
+      return {
+        ...vehicle,
+        name: manufacturer ? `${manufacturer} ${v.name}` : v.name,
+        item: docRef,
+      };
+    });
+
     return (
       <Container fluid>
         {update ? (
@@ -242,10 +236,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                 <Form.Group as={Col} md="6" sm="12">
                   <Form.Label>Podium</Form.Label>
                   <SearchInput
-                    options={vehicles.map((v) => ({
-                      label: `${v.manufacturer} ${v.name}`,
+                    options={updateVehicles.map((v) => ({
+                      label: v.name,
                       value: v,
-                      id: v.docRef!.id,
+                      id: v.item!.id,
                     }))}
                     selected={
                       update.podium && {
@@ -263,10 +257,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>New</Form.Label>
                   <SearchInput
                     multi
-                    options={vehicles.map((v) => ({
+                    options={updateVehicles.map((v) => ({
                       label: v.name,
                       value: v,
-                      id: v.docRef!.id,
+                      id: v.item!.id,
                     }))}
                     onSelect={(option) => this.setItem("new", option.value)}
                   />
@@ -274,7 +268,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                     {this.state.update?.new?.map((i) => (
                       <UpdateItemEditor
                         item={i}
-                        key={i.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("new", item)}
                         deleteItem={() => this.deleteItem("new", i)}
                       />
@@ -287,10 +281,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Sale</Form.Label>
                   <SearchInput
                     multi
-                    options={vehicles.map((v) => ({
-                      label: `${v.manufacturer} ${v.name}`,
+                    options={updateVehicles.map((v) => ({
+                      label: v.name,
                       value: v,
-                      id: v.docRef!.id,
+                      id: v.item!.id,
                     }))}
                     onSelect={(option) =>
                       this.setItem("sale", { ...option.value, amount: 10 })
@@ -301,7 +295,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <UpdateItemEditor
                         item={i}
                         sale
-                        key={i.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("sale", item)}
                         deleteItem={() => this.deleteItem("sale", i)}
                       />
@@ -312,10 +306,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Twitch Prime</Form.Label>
                   <SearchInput
                     multi
-                    options={vehicles.map((v) => ({
-                      label: `${v.manufacturer} ${v.name}`,
+                    options={updateVehicles.map((v) => ({
+                      label: v.name,
                       value: v,
-                      id: v.docRef!.id,
+                      id: v.item!.id,
                     }))}
                     onSelect={(option) =>
                       this.setItem("twitchPrime", {
@@ -329,7 +323,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <UpdateItemEditor
                         item={i}
                         sale
-                        key={i.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("twitchPrime", item)}
                         deleteItem={() => this.deleteItem("twitchPrime", i)}
                       />
@@ -342,10 +336,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Targeted Sales</Form.Label>
                   <SearchInput
                     multi
-                    options={vehicles.map((v) => ({
-                      label: `${v.manufacturer} ${v.name}`,
+                    options={updateVehicles.map((v) => ({
+                      label: v.name,
                       value: v,
-                      id: v.docRef!.id,
+                      id: v.item!.id,
                     }))}
                     onSelect={(option) =>
                       this.setItem("targetedSale", {
@@ -359,7 +353,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <UpdateItemEditor
                         item={i}
                         sale
-                        key={i.id}
+                        key={i.item!.id}
                         setItem={(item) => this.setItem("targetedSale", item)}
                         deleteItem={() => this.deleteItem("targetedSale", i)}
                       />
