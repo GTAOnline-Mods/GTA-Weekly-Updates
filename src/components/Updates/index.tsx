@@ -1,6 +1,8 @@
 // eslint-disable react-hooks/exhaustive-deps
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Card, CardDeck } from "react-bootstrap";
+import { Button, Card, CardDeck } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
@@ -17,12 +19,8 @@ interface UpdatesProps {
 
 const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
   React.useEffect(() => {
-    async function getUpdates() {
-      const u = await firebase!.getUpdates();
-      setUpdates(u);
-    }
     if (!updates || updates.length === 0) {
-      getUpdates();
+      firebase!.getUpdates().then(setUpdates);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -34,39 +32,72 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
           u1.date === u2.date ? 0 : u1.date < u2.date ? 1 : -1
         )
         .map((update: Update, index: number) => (
-          <Card key={index}>
+          <Card key={index} style={{ minWidth: "300px" }} className="mb-2">
             <Card.Body>
-              <Card.Title className="pb-2">Weekly Update</Card.Title>
+              <Card.Title className="pb-2 d-flex justify-content-between">
+                <span>Weekly Update</span>
+                {update.redditThread && (
+                  <Button
+                    variant="link"
+                    href={update.redditThread}
+                    target="_blank"
+                  >
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  </Button>
+                )}
+              </Card.Title>
               {update.podium && (
                 <span>
                   <b>Podium Vehicle</b>
                   <br />
                   <ul>
                     <UpdateItemElement
-                      key={update.podium.id}
+                      key={update.podium.item.id}
                       item={update.podium}
                     />
                   </ul>
                 </span>
               )}
-              {update.new.length ? <b>New Content</b> : ""}
-              <ul>
-                {update.new.map((item: UpdateItem) => (
-                  <UpdateItemElement key={item.id} item={item} />
-                ))}
-              </ul>
-              {update.sale.length ? <b>Discounts</b> : ""}
-              <ul>
-                {update.sale.map((item: SaleItem) => (
-                  <UpdateItemElement key={item.id} item={item} />
-                ))}
-              </ul>
-              {update.twitchPrime.length ? <b>Twitch Prime Bonuses</b> : ""}
-              <ul>
-                {update.twitchPrime.map((item: SaleItem) => (
-                  <UpdateItemElement key={item.id} item={item} />
-                ))}
-              </ul>
+              {update.new.length !== 0 && (
+                <React.Fragment>
+                  <b>New Content</b>
+                  <ul>
+                    {update.new.map((item: UpdateItem) => (
+                      <UpdateItemElement key={item.item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
+              {update.sale.length !== 0 && (
+                <React.Fragment>
+                  <b>Discounts</b>
+                  <ul>
+                    {update.sale.map((item: SaleItem) => (
+                      <UpdateItemElement key={item.item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
+              {update.twitchPrime.length !== 0 && (
+                <React.Fragment>
+                  <b>Twitch Prime Bonuses</b>
+                  <ul>
+                    {update.twitchPrime.map((item: SaleItem) => (
+                      <UpdateItemElement key={item.item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
+              {update.targetedSale.length !== 0 && (
+                <React.Fragment>
+                  <b>Targeted Sales</b>
+                  <ul>
+                    {update.targetedSale.map((item: SaleItem) => (
+                      <UpdateItemElement key={item.item.id} item={item} />
+                    ))}
+                  </ul>
+                </React.Fragment>
+              )}
               {update.timeTrial && (
                 <div>
                   <p>
@@ -78,7 +109,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                       rel="noopener noreferrer"
                     >
                       {update.timeTrial.name}, Par Time{" "}
-                      {update.rcTimeTrial.parTime}
+                      {update.timeTrial.parTime}
                     </a>
                   </p>
                 </div>

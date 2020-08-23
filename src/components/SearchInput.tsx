@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Dropdown,
-
-  FormControl,
-  InputGroup
-} from "react-bootstrap";
+import { Button, Dropdown, FormControl, InputGroup } from "react-bootstrap";
 import "./SearchInput.scss";
 
 interface SearchInputOption {
@@ -16,14 +10,15 @@ interface SearchInputOption {
 
 interface SearchInputProps {
   options: SearchInputOption[];
+  selected?: SearchInputOption;
   onSelect?: (option: SearchInputOption) => void;
   multi?: boolean;
 }
 
-function SearchInput({ options, onSelect, multi }: SearchInputProps) {
+function SearchInput({ options, onSelect, multi, selected }: SearchInputProps) {
   const [search, setSearch] = React.useState("");
   const [selection, setSelection] = React.useState<SearchInputOption | null>(
-    null
+    selected || null
   );
 
   return (
@@ -60,19 +55,16 @@ function SearchInput({ options, onSelect, multi }: SearchInputProps) {
                   setSearch(event.target.value)
                 }
               />
-              {options
-                .filter((option) =>
-                  search
-                    ? option.label
-                        .toLowerCase()
-                        .indexOf(search.toLowerCase()) !== -1
-                    : true
-                )
-                .map((option, index) => (
-                  <Dropdown.Item key={index} eventKey={option.id}>
-                    {option.label}
-                  </Dropdown.Item>
-                ))}
+              {(search
+                ? options.filter((option) =>
+                    option.label.toLowerCase().includes(search.toLowerCase())
+                  )
+                : options
+              ).map((option, index) => (
+                <Dropdown.Item key={index} eventKey={option.id}>
+                  {option.label}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
         </InputGroup.Prepend>

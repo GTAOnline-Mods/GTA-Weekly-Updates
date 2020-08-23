@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
+import Snoowrap, { SnoowrapOptions } from "snoowrap";
 import Admin from "./admin";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -14,7 +15,7 @@ import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import VehicleView from "./pages/VehicleView";
 import { RootState } from "./store";
-import { loadFaqThread } from "./store/Reddit";
+import { loadFaqThread, setRedditClient } from "./store/Reddit";
 import { setIsAdmin, setLoggedIn, setRedirectUrl } from "./store/User";
 
 interface AppProps {
@@ -25,7 +26,9 @@ interface AppProps {
   loggedIn: boolean;
   isAdmin: boolean;
   setIsAdmin: typeof setIsAdmin;
-  setRedirectUrl: (path?: string) => void;
+  setRedirectUrl: typeof setRedirectUrl;
+  redditClient: Snoowrap;
+  setRedditClient: typeof setRedditClient;
 }
 
 function App({
@@ -37,6 +40,8 @@ function App({
   isAdmin,
   setIsAdmin,
   setRedirectUrl,
+  redditClient,
+  setRedditClient,
 }: AppProps) {
   React.useEffect(() => {
     loadFaqThread();
@@ -50,6 +55,17 @@ function App({
       .then((snapshot: firebase.firestore.DocumentSnapshot | null) => {
         if (snapshot && snapshot.data()?.admin) {
           setIsAdmin(true);
+          if (!redditClient) {
+            firebase?.db
+              .collection("configs")
+              .doc("reddit")
+              .get()
+              .then((snapshot: firebase.firestore.DocumentSnapshot) =>
+                setRedditClient(
+                  new Snoowrap({ ...(snapshot.data()! as SnoowrapOptions) })
+                )
+              );
+          }
         }
       });
   }
@@ -102,6 +118,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       loadFaqThread,
       setIsAdmin,
       setRedirectUrl,
+      setRedditClient,
     },
     dispatch
   );
@@ -110,6 +127,7 @@ const mapStateToProps = (state: RootState) => ({
   faqThread: state.reddit.faqThread,
   loggedIn: state.user.loggedIn,
   isAdmin: state.user.isAdmin,
+  redditClient: state.reddit.redditClient,
 });
 
 export default compose(

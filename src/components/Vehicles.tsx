@@ -1,7 +1,13 @@
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Button, Container, ListGroup } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  FormControl,
+  InputGroup,
+  ListGroup
+} from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { bindActionCreators, compose, Dispatch } from "redux";
@@ -25,6 +31,8 @@ function Vehicles({
   isAdmin,
   admin,
 }: VehiclesProps) {
+  const [search, setSearch] = React.useState("");
+
   React.useEffect(() => {
     async function getVehicles() {
       const v = await firebase!.getVehicles();
@@ -41,8 +49,29 @@ function Vehicles({
     <Container fluid className="p-2">
       <h1>Vehicles</h1>
       <br />
+      <InputGroup className="mb-3">
+        <FormControl
+          placeholder="Vehicle Name"
+          aria-label="Vehicle Name"
+          aria-describedby="search"
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setSearch(event.target.value)
+          }
+        />
+        <InputGroup.Append>
+          <InputGroup.Text id="search">
+            <FontAwesomeIcon icon={faSearch} />
+          </InputGroup.Text>
+        </InputGroup.Append>
+      </InputGroup>
+      <br />
       <ListGroup>
-        {vehicles.map((vehicle) => (
+        {(search
+          ? vehicles.filter((v) =>
+              (v.manufacturer + " " + v.name).toLowerCase().includes(search.toLowerCase())
+            )
+          : vehicles
+        ).map((vehicle) => (
           <ListGroup.Item
             action
             as={Link}

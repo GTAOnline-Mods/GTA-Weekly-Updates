@@ -5,6 +5,7 @@ export interface Vehicle {
   manufacturer?: string;
   name: string;
   price?: number;
+  tradePrice?: number;
   shop?: string;
   url?: string;
   docRef?: firebase.firestore.DocumentReference;
