@@ -170,10 +170,15 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
               redditThread: id,
             })
             .then(() => {
-              this.props.setUpdate(this.state.update!!);
+              const u = {
+                ...this.state.update!!,
+                redditThread: id,
+              };
               this.setState({
+                update: u,
                 loading: false,
               });
+              this.props.setUpdate(u);
             })
             .catch(console.error);
         } else {
@@ -186,10 +191,12 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
             .then((ref: firebase.firestore.DocumentReference) => {
               const u = {
                 ...this.state.update!!,
+                redditThread: id,
                 docRef: ref,
               };
               this.setState({
                 update: u,
+                loading: false,
               });
               this.props.setUpdate(u);
             })
@@ -212,19 +219,25 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         if (update.sale.length) {
           groups.push(
             "**Discounted Content**\n" +
-              u.sale.map((item) => ` - ${item.amount}% off ${item.name}`).join("\n")
+              u.sale
+                .map((item) => ` - ${item.amount}% off ${item.name}`)
+                .join("\n")
           );
         }
         if (update.twitchPrime.length) {
           groups.push(
             "**Twitch Prime Bonuses**\n" +
-              u.twitchPrime.map((item) => ` - ${item.amount}% off ${item.name}`).join("\n")
+              u.twitchPrime
+                .map((item) => ` - ${item.amount}% off ${item.name}`)
+                .join("\n")
           );
         }
         if (update.targetedSale.length) {
           groups.push(
             "**Targeted Sales**\n" +
-              u.targetedSale.map((item) => ` - ${item.amount}% off ${item.name}`).join("\n")
+              u.targetedSale
+                .map((item) => ` - ${item.amount}% off ${item.name}`)
+                .join("\n")
           );
         }
         if (update.timeTrial) {
