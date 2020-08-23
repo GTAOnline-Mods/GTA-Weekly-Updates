@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -152,54 +152,113 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
 
-      console.log(update);
-
       this.setState({
         loading: true,
       });
 
+      const updateDoc = (resp: any) => {
+        const id = resp.name
+          ? resp.name.substring(3)
+          : resp.json.data.things[0].id;
+
+        if (docRef) {
+          docRef!
+            .update({
+              ...update,
+              redditThread: id,
+            })
+            .then(() => {
+              this.props.setUpdate(this.state.update!!);
+              this.setState({
+                loading: false,
+              });
+            })
+            .catch(console.error);
+        } else {
+          this.props.firebase?.db
+            .collection("updates")
+            .add({
+              ...update,
+              redditThread: id,
+            })
+            .then((ref: firebase.firestore.DocumentReference) => {
+              const u = {
+                ...this.state.update!!,
+                docRef: ref,
+              };
+              this.setState({
+                update: u,
+              });
+              this.props.setUpdate(u);
+            })
+            .catch(console.error);
+        }
+      };
+
       if (this.props.redditClient) {
-        const sub = this.props.redditClient.getSubreddit("gtaonline");
+        const groups: string[] = [];
 
-        console.log(u.date.toLocaleDateString("en-us"));
-        console.log(
-          "**New Content**\n",
-          u.new.map(
-            (item) => `${item.amount}% off ${item.manufacturer} ${item.name}`
-          )
-        );
+        if (update.new.length) {
+          groups.push(
+            "**New Content**\n" +
+              u.new.map((item) => ` - ${item.name}`).join("\n")
+          );
+        }
+        if (update.podium) {
+          groups.push(`**Podium Vehicle**\n - ${update.podium.name}`);
+        }
+        if (update.sale.length) {
+          groups.push(
+            "**Discounted Content**\n" +
+              u.sale.map((item) => ` - ${item.name}`).join("\n")
+          );
+        }
+        if (update.twitchPrime.length) {
+          groups.push(
+            "**Twitch Prime Bonuses**\n" +
+              u.twitchPrime.map((item) => ` - ${item.name}`).join("\n")
+          );
+        }
+        if (update.targetedSale.length) {
+          groups.push(
+            "**Targeted Sales**\n" +
+              u.targetedSale.map((item) => ` - ${item.name}`).join("\n")
+          );
+        }
+        if (update.timeTrial) {
+          groups.push(
+            `**Time Trial**\n - [${update.timeTrial.name}](${update.timeTrial.url})`
+          );
+        }
+        if (update.rcTimeTrial) {
+          groups.push(
+            `**RC Bandito Time Trial**\n - [${update.rcTimeTrial.name}](${update.rcTimeTrial.url})`
+          );
+        }
+        if (update.premiumRace) {
+          groups.push(
+            `**Premium Race**\n - [${update.premiumRace.name}](${update.premiumRace.url})`
+          );
+        }
 
-        // await sub.submitSelfPost(`${}`)
-      }
-
-      if (docRef) {
-        docRef!
-          .update(update)
-          .then(() => {
-            this.props.setUpdate(this.state.update!!);
-            this.setState({
-              loading: false,
+        if (!update.redditThread) {
+          this.props.redditClient
+            .submitSelfpost({
+              subredditName: "gtaonline",
+              title: `${u.date.toLocaleDateString(
+                "en-us"
+              )} Weekly GTA Online Bonuses`,
+              text: groups.join("\n\n"),
+            })
+            .then(updateDoc);
+        } else {
+          this.props.redditClient
+            .getSubmission(update.redditThread)
+            .fetch()
+            .then((s) => {
+              s.edit(groups.join("\n\n")).then(updateDoc);
             });
-          })
-          .catch(console.error);
-      } else {
-        this.props.firebase?.db
-          .collection("updates")
-          .add({
-            ...u,
-            date: firebase.firestore.Timestamp.fromDate(u.date),
-          })
-          .then((ref: firebase.firestore.DocumentReference) => {
-            const u = {
-              ...this.state.update!!,
-              docRef: ref,
-            };
-            this.setState({
-              update: u,
-            });
-            this.props.setUpdate(u);
-          })
-          .catch(console.error);
+        }
       }
     }
   }, 2000);
@@ -211,7 +270,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     const { update, updateExists, loading } = this.state;
     const { match, vehicles } = this.props;
 
-    const updateVehicles = vehicles.map(v => {
+    const updateVehicles = vehicles.map((v) => {
       const { docRef, manufacturer, ...vehicle } = v;
 
       return {
