@@ -212,19 +212,19 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         if (update.sale.length) {
           groups.push(
             "**Discounted Content**\n" +
-              u.sale.map((item) => ` - ${item.name}`).join("\n")
+              u.sale.map((item) => ` - ${item.amount}% off ${item.name}`).join("\n")
           );
         }
         if (update.twitchPrime.length) {
           groups.push(
             "**Twitch Prime Bonuses**\n" +
-              u.twitchPrime.map((item) => ` - ${item.name}`).join("\n")
+              u.twitchPrime.map((item) => ` - ${item.amount}% off ${item.name}`).join("\n")
           );
         }
         if (update.targetedSale.length) {
           groups.push(
             "**Targeted Sales**\n" +
-              u.targetedSale.map((item) => ` - ${item.name}`).join("\n")
+              u.targetedSale.map((item) => ` - ${item.amount}% off ${item.name}`).join("\n")
           );
         }
         if (update.timeTrial) {
