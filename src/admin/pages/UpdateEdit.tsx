@@ -212,17 +212,32 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         if (update.new.length) {
           groups.push(
             "**New Content**\n" +
-              u.new.map((item) => ` - ${item.name}`).join("\n")
+              u.new
+                .map((item) =>
+                  item.url
+                    ? ` - [${item.name}](${item.url})`
+                    : ` - ${item.name}`
+                )
+                .join("\n")
           );
         }
         if (update.podium) {
-          groups.push(`**Podium Vehicle**\n - ${update.podium.name}`);
+          groups.push(
+            "**Podium Vehicle**\n" +
+              (update.podium.url
+                ? ` - [${update.podium.name}](${update.podium.url})`
+                : ` - ${update.podium.name}`)
+          );
         }
         if (update.sale.length) {
           groups.push(
             "**Discounted Content**\n" +
               u.sale
-                .map((item) => ` - ${item.amount}% off ${item.name}`)
+                .map((item) =>
+                  item.url
+                    ? ` - ${item.amount}% off [${item.name}](${item.url})`
+                    : ` - ${item.amount}% off ${item.name}`
+                )
                 .join("\n")
           );
         }
@@ -230,7 +245,11 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           groups.push(
             "**Twitch Prime Bonuses**\n" +
               u.twitchPrime
-                .map((item) => ` - ${item.amount}% off ${item.name}`)
+                .map((item) =>
+                  item.url
+                    ? ` - ${item.amount}% off [${item.name}](${item.url})`
+                    : ` - ${item.amount}% off ${item.name}`
+                )
                 .join("\n")
           );
         }
@@ -238,7 +257,11 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           groups.push(
             "**Targeted Sales**\n" +
               u.targetedSale
-                .map((item) => ` - ${item.amount}% off ${item.name}`)
+                .map((item) =>
+                  item.url
+                    ? ` - ${item.amount}% off [${item.name}](${item.url})`
+                    : ` - ${item.amount}% off ${item.name}`
+                )
                 .join("\n")
           );
         }
