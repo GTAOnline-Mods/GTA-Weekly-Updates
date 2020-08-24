@@ -25,8 +25,8 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
       setLoading(true);
       firebase!.getUpdates().then((updates) => {
         setUpdates(updates);
+        setLoading(false);
       });
-      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
