@@ -75,11 +75,7 @@ function App({
       <Header />
       <div className="yellow-overlay" />
       <Switch>
-        <Route path="/" exact>
-          <Container fluid>
-            <Updates />
-          </Container>
-        </Route>
+        <Route path="/" exact component={Updates} />
         <Route path="/login" component={LogIn} />
         <Route path="/sign-up" component={SignUp} />
         <Route path="/vehicles/:id" component={VehicleView} />
