@@ -9,18 +9,19 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Snoowrap from "snoowrap";
-import SearchInput from "../../components/SearchInput";
+import SearchInput, { SearchInputOption } from "../../components/SearchInput";
 import Firebase, { withFirebase } from "../../Firebase";
 import Update, { SaleItem, UpdateItem } from "../../models/update";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
+import { getVehiclesAsSearchInputOptions } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
 import "./UpdateEdit.scss";
@@ -36,6 +37,7 @@ interface UpdateEditProps extends RouteComponentProps<UpdateEditMatch> {
   setUpdate: typeof setUpdate;
   setUpdates: typeof setUpdates;
   vehicles: Vehicle[];
+  vehicleSearchInputOptions: SearchInputOption[];
   setVehicles: typeof setVehicles;
   redditClient: Snoowrap;
 }
@@ -283,17 +285,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
   // tslint:disable-next-line: max-func-body-length
   render() {
     const { update, updateExists, loading } = this.state;
-    const { match, vehicles } = this.props;
-
-    const updateVehicles = vehicles.map((v) => {
-      const { docRef, manufacturer, ...vehicle } = v;
-
-      return {
-        ...vehicle,
-        name: manufacturer ? `${manufacturer} ${v.name}` : v.name,
-        item: docRef,
-      };
-    });
+    const { match, vehicleSearchInputOptions } = this.props;
 
     return (
       <Container fluid>
@@ -310,11 +302,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                 <Form.Group as={Col} md="6" sm="12">
                   <Form.Label>Podium</Form.Label>
                   <SearchInput
-                    options={updateVehicles.map((v) => ({
-                      label: v.name,
-                      value: v,
-                      id: v.item!.id,
-                    }))}
+                    options={vehicleSearchInputOptions}
                     selected={
                       update.podium && {
                         label: update.podium?.name,
@@ -331,11 +319,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>New</Form.Label>
                   <SearchInput
                     multi
-                    options={updateVehicles.map((v) => ({
-                      label: v.name,
-                      value: v,
-                      id: v.item!.id,
-                    }))}
+                    options={vehicleSearchInputOptions}
                     onSelect={(option) => this.setItem("new", option.value)}
                   />
                   <ListGroup className="mt-2">
@@ -355,11 +339,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Sale</Form.Label>
                   <SearchInput
                     multi
-                    options={updateVehicles.map((v) => ({
-                      label: v.name,
-                      value: v,
-                      id: v.item!.id,
-                    }))}
+                    options={vehicleSearchInputOptions}
                     onSelect={(option) =>
                       this.setItem("sale", { ...option.value, amount: 10 })
                     }
@@ -380,11 +360,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Twitch Prime</Form.Label>
                   <SearchInput
                     multi
-                    options={updateVehicles.map((v) => ({
-                      label: v.name,
-                      value: v,
-                      id: v.item!.id,
-                    }))}
+                    options={vehicleSearchInputOptions}
                     onSelect={(option) =>
                       this.setItem("twitchPrime", {
                         ...option.value,
@@ -410,11 +386,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                   <Form.Label>Targeted Sales</Form.Label>
                   <SearchInput
                     multi
-                    options={updateVehicles.map((v) => ({
-                      label: v.name,
-                      value: v,
-                      id: v.item!.id,
-                    }))}
+                    options={vehicleSearchInputOptions}
                     onSelect={(option) =>
                       this.setItem("targetedSale", {
                         ...option.value,
@@ -575,6 +547,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 const mapStateToProps = (state: RootState) => ({
   updates: state.updates.updates,
   vehicles: state.vehicles.vehicles,
+  vehicleSearchInputOptions: getVehiclesAsSearchInputOptions(state),
   redditClient: state.reddit.redditClient,
 });
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Dropdown, FormControl, InputGroup } from "react-bootstrap";
 import "./SearchInput.scss";
 
-interface SearchInputOption {
+export interface SearchInputOption {
   label: string;
   value: any;
   id: string;
