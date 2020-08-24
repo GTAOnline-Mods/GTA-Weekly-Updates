@@ -152,6 +152,8 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
 
+      console.log(update);
+
       this.setState({
         loading: true,
       });
