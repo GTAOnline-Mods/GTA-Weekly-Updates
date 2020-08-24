@@ -8,7 +8,7 @@ import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
-import { setVehicle, setVehicles } from "../../store/Vehicles";
+import { setVehicle } from "../../store/Vehicles";
 
 const shops = [
   "Legendary Motorsports",
@@ -27,7 +27,6 @@ interface VehicleEditProps extends RouteComponentProps<VehicleEditMatch> {
   firebase?: Firebase;
   vehicles: Vehicle[];
   setVehicle: typeof setVehicle;
-  setVehicles: typeof setVehicles;
 }
 
 interface VehicleEditState {
@@ -50,23 +49,29 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
 
   async componentDidMount() {
     if (this.props.match.params.id) {
-      if (!this.props.vehicles.length) {
-        const v = await this.props.firebase!.getVehicles();
-        this.props.setVehicles(v);
-      }
-
-      const vehicle = this.props.vehicles.filter(
+      const v = this.props.vehicles.filter(
         (v) => v.docRef?.id === this.props.match.params.id
       );
 
-      if (vehicle.length) {
+      if (v.length) {
         this.setState({
-          vehicle: vehicle[0],
+          vehicle: v[0],
         });
       } else {
-        this.setState({
-          vehicleExists: false,
-        });
+        const v = await this.props.firebase!.getVehicle(
+          this.props.match.params.id
+        );
+
+        if (v) {
+          this.props.setVehicle(v);
+          this.setState({
+            vehicle: v,
+          });
+        } else {
+          this.setState({
+            vehicleExists: false,
+          });
+        }
       }
     } else {
       this.setState({
@@ -277,7 +282,6 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       setVehicle,
-      setVehicles,
     },
     dispatch
   );

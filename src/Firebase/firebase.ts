@@ -84,6 +84,18 @@ class Firebase {
       docRef: doc.ref,
     }));
   };
+
+  getVehicle = async (id: string) => {
+    const doc = await this.db.collection("vehicles").doc(id).get();
+    if (doc.exists) {
+      return {
+        ...(doc.data() as Vehicle),
+        docRef: doc.ref,
+      };
+    } else {
+      return null;
+    }
+  };
 }
 
 export default Firebase;

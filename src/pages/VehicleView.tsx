@@ -9,7 +9,7 @@ import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { Vehicle } from "../models/vehicle";
 import { RootState } from "../store";
-import { setVehicles } from "../store/Vehicles";
+import { setVehicle } from "../store/Vehicles";
 
 interface VehicleViewMatch {
   id: string;
@@ -19,7 +19,7 @@ interface VehicleViewProps extends RouteComponentProps<VehicleViewMatch> {
   firebase?: Firebase;
   vehicles: Vehicle[];
   isAdmin: boolean;
-  setVehicles: typeof setVehicles;
+  dispatchSetVehicle: typeof setVehicle;
 }
 
 // tslint:disable-next-line: function-name
@@ -27,7 +27,7 @@ interface VehicleViewProps extends RouteComponentProps<VehicleViewMatch> {
 function VehicleView({
   firebase,
   vehicles,
-  setVehicles,
+  dispatchSetVehicle,
   match,
   isAdmin,
 }: VehicleViewProps) {
@@ -35,18 +35,22 @@ function VehicleView({
   const [vehicleExists, setVehicleExists] = React.useState(true);
 
   React.useEffect(() => {
-    if (!vehicles || vehicles.length === 0) {
-      firebase!.getVehicles().then(setVehicles);
-    }
-
     const v = vehicles.filter((v) => v.docRef?.id === match.params.id);
+
     if (v.length) {
       setVehicle(v[0]);
     } else {
-      setVehicleExists(false);
+      firebase?.getVehicle(match.params.id).then((v) => {
+        if (v) {
+          dispatchSetVehicle(v);
+          setVehicle(v);
+        } else {
+          setVehicleExists(false);
+        }
+      });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vehicles, match]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [match]);
 
   if (vehicle) {
     return (
@@ -115,7 +119,7 @@ function VehicleView({
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      setVehicles,
+      dispatchSetVehicle: setVehicle,
     },
     dispatch
   );
