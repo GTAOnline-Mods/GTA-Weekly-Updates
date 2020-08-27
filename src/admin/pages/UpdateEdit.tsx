@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -18,14 +18,24 @@ import { bindActionCreators, compose, Dispatch } from "redux";
 import Snoowrap from "snoowrap";
 import SearchInput, { SearchInputOption } from "../../components/SearchInput";
 import Firebase, { withFirebase } from "../../Firebase";
-import Update, { SaleItem, UpdateItem } from "../../models/update";
+import { Mission } from "../../models/mission";
+import Update, {
+  BonusActivity,
+  SaleItem,
+  UpdateItem,
+} from "../../models/update";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
-import { getVehiclesAsSearchInputOptions } from "../../store/selectors";
+import { setMissions } from "../../store/Missions";
+import {
+  getVehiclesAsSearchInputOptions,
+  getMissionsAsSearchInputOptions,
+} from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
 import "./UpdateEdit.scss";
 import UpdateItemEditor from "./UpdateItemEditor";
+import UpdateActivityEditor from "./UpdateActivityEditor";
 
 interface UpdateEditMatch {
   id?: string;
@@ -39,6 +49,9 @@ interface UpdateEditProps extends RouteComponentProps<UpdateEditMatch> {
   vehicles: Vehicle[];
   vehicleSearchInputOptions: SearchInputOption[];
   setVehicles: typeof setVehicles;
+  missions: Mission[];
+  missionSearchInputOptions: SearchInputOption[];
+  setMissions: typeof setMissions;
   redditClient: Snoowrap;
 }
 
@@ -82,6 +95,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     } else {
       this.setState({
         update: {
+          bonusActivities: [],
           new: [],
           sale: [],
           targetedSale: [],
@@ -93,6 +107,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
 
     if (!this.props.vehicles.length) {
       this.props.firebase!.getVehicles().then(this.props.setVehicles);
+    }
+
+    if (!this.props.missions.length) {
+      this.props.firebase!.getMissions().then(this.props.setMissions);
     }
   }
 
@@ -138,6 +156,35 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         [key]: [
           ...this.state.update![key].filter(
             (i: UpdateItem) => item.item.id !== i.item.id
+          ),
+        ],
+      },
+    });
+    this.debouncedSave();
+  };
+
+  setActivity = (activity: BonusActivity) => {
+    this.setState({
+      update: {
+        ...this.state.update!,
+        bonusActivities: [
+          ...this.state.update!.bonusActivities.filter(
+            (a: BonusActivity) => activity.activity.id !== a.activity.id
+          ),
+          activity,
+        ],
+      },
+    });
+    this.debouncedSave();
+  };
+
+  deleteActivity = (activity: BonusActivity) => {
+    this.setState({
+      update: {
+        ...this.state.update!,
+        bonusActivities: [
+          ...this.state.update!.bonusActivities.filter(
+            (a: BonusActivity) => activity.activity.id !== a.activity.id
           ),
         ],
       },
@@ -307,7 +354,11 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
   // tslint:disable-next-line: max-func-body-length
   render() {
     const { update, updateExists, loading } = this.state;
-    const { match, vehicleSearchInputOptions } = this.props;
+    const {
+      match,
+      vehicleSearchInputOptions,
+      missionSearchInputOptions,
+    } = this.props;
 
     return (
       <Container fluid>
@@ -351,6 +402,26 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                         key={i.item!.id}
                         setItem={(item) => this.setItem("new", item)}
                         deleteItem={() => this.deleteItem("new", i)}
+                      />
+                    ))}
+                  </ListGroup>
+                </Form.Group>
+              </Form.Row>
+              <Form.Row className="my-2">
+                <Form.Group as={Col} md="6" sm="12">
+                  <Form.Label>Bonus GTA$ and RP Activities</Form.Label>
+                  <SearchInput
+                    multi
+                    options={missionSearchInputOptions}
+                    onSelect={(option) => this.setActivity(option.value)}
+                  />
+                  <ListGroup className="mt-2">
+                    {this.state.update?.bonusActivities?.map((a) => (
+                      <UpdateActivityEditor
+                        activity={a}
+                        key={a.activity!.id}
+                        setActivity={this.setActivity}
+                        deleteActivity={() => this.deleteActivity(a)}
                       />
                     ))}
                   </ListGroup>
@@ -562,6 +633,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       setUpdate,
       setUpdates,
       setVehicles,
+      setMissions,
     },
     dispatch
   );
@@ -570,6 +642,8 @@ const mapStateToProps = (state: RootState) => ({
   updates: state.updates.updates,
   vehicles: state.vehicles.vehicles,
   vehicleSearchInputOptions: getVehiclesAsSearchInputOptions(state),
+  missions: state.missions.missions,
+  missionSearchInputOptions: getMissionsAsSearchInputOptions(state),
   redditClient: state.reddit.redditClient,
 });
 

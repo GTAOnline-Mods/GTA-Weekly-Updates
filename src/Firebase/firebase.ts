@@ -70,6 +70,7 @@ class Firebase {
 
     return snapshot!.docs.map((doc) => ({
       ...(doc.data() as Update),
+      bonusActivities: doc.data()!.bonusActivities || [],
       date: new Date(doc.data()!.date.seconds * 1000),
       docRef: doc.ref,
     }));
