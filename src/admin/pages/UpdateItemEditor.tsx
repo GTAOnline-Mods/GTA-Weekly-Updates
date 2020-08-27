@@ -36,6 +36,15 @@ function UpdateItemEditor({
         )}
         <InputGroup.Append>
           {sale && <InputGroup.Text>%</InputGroup.Text>}
+          {sale && (
+            <InputGroup.Text>
+              GTA${" "}
+              {(
+                item.price *
+                (1 - (item as SaleItem).amount / 100)
+              ).toLocaleString()}
+            </InputGroup.Text>
+          )}
           <Button
             variant="secondary"
             onClick={deleteItem}
