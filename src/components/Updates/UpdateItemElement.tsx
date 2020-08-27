@@ -5,7 +5,7 @@ import { Button, Image, Modal } from "react-bootstrap";
 import { SaleItem, UpdateItem } from "../../models/update";
 
 interface UpdateItemCardProps {
-  item: UpdateItem;
+  item: UpdateItem | SaleItem;
 }
 
 function UpdateItemElement({ item }: UpdateItemCardProps) {

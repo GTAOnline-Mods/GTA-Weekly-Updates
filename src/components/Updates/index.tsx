@@ -6,9 +6,13 @@ import { Button, Card, CardDeck, Container, Spinner } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../../Firebase";
-import Update, { SaleItem, UpdateItem } from "../../models/update";
+import Update, {
+  BonusActivity, SaleItem,
+  UpdateItem
+} from "../../models/update";
 import { RootState } from "../../store";
 import { setUpdates } from "../../store/Updates";
+import UpdateActivityElement from "./UpdateActivityElement";
 import UpdateItemElement from "./UpdateItemElement";
 
 interface UpdatesProps {
@@ -76,6 +80,21 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                         {update.new.map((item: UpdateItem) => (
                           <UpdateItemElement key={item.item.id} item={item} />
                         ))}
+                      </ul>
+                    </React.Fragment>
+                  )}
+                  {update.bonusActivities.length !== 0 && (
+                    <React.Fragment>
+                      <b>Bonus GTA$ and RP Activities</b>
+                      <ul>
+                        {update.bonusActivities.map(
+                          (activity: BonusActivity) => (
+                            <UpdateActivityElement
+                              key={activity.activity.id}
+                              activity={activity}
+                            />
+                          )
+                        )}
                       </ul>
                     </React.Fragment>
                   )}
