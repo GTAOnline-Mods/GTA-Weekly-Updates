@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -22,20 +22,20 @@ import { Mission } from "../../models/mission";
 import Update, {
   BonusActivity,
   SaleItem,
-  UpdateItem,
+  UpdateItem
 } from "../../models/update";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
 import { setMissions } from "../../store/Missions";
 import {
-  getVehiclesAsSearchInputOptions,
   getMissionsAsSearchInputOptions,
+  getVehiclesAsSearchInputOptions
 } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
+import UpdateActivityEditor from "./UpdateActivityEditor";
 import "./UpdateEdit.scss";
 import UpdateItemEditor from "./UpdateItemEditor";
-import UpdateActivityEditor from "./UpdateActivityEditor";
 
 interface UpdateEditMatch {
   id?: string;
@@ -272,11 +272,11 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
 
         if (update.new.length) {
           groups.push(
-            "**New Content**\n" +
+            "**New Content**\n\n" +
               u.new
                 .map((item) =>
                   item.url
-                    ? ` - [${item.name}](${item.url})`
+                    ? ` - ${item.name} [↗](${item.url})`
                     : ` - ${item.name}`
                 )
                 .join("\n\n")
@@ -284,42 +284,68 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         }
         if (update.podium) {
           groups.push(
-            "**Podium Vehicle**\n" +
+            "**Podium Vehicle**\n\n" +
               (update.podium.url
-                ? ` - [${update.podium.name}](${update.podium.url})`
+                ? ` - ${update.podium.name} [↗](${update.podium.url})`
                 : ` - ${update.podium.name}`)
+          );
+        }
+        if (update.bonusActivities.length) {
+          groups.push(
+            "**Bonus GTA$ and RP Activities**\n\n" +
+              u.bonusActivities
+                .map((activity) => {
+                  const bonusString =
+                    activity.moneyAmount === activity.rpAmount
+                      ? activity.moneyAmount + "x GTA$ and RP"
+                      : activity.moneyAmount +
+                        "x GTA$ and " +
+                        activity.rpAmount +
+                        "x RP";
+
+                  return (
+                    " - " +
+                    bonusString +
+                    " on " +
+                    (activity.url
+                      ? `${activity.name} [↗](${activity.url})`
+                      : `${activity.name}`)
+                  );
+                })
+                .join("\n\n")
           );
         }
         if (update.sale.length) {
           groups.push(
-            "**Discounted Content**\n" + u.sale.map(getSaleString).join("\n\n")
+            "**Discounted Content**\n\n" +
+              u.sale.map(getSaleString).join("\n\n")
           );
         }
         if (update.twitchPrime.length) {
           groups.push(
-            "**Twitch Prime Bonuses**\n" +
+            "**Twitch Prime Bonuses**\n\n" +
               u.twitchPrime.map(getSaleString).join("\n\n")
           );
         }
         if (update.targetedSale.length) {
           groups.push(
-            "**Targeted Sales**\n" +
+            "**Targeted Sales**\n\n" +
               u.targetedSale.map(getSaleString).join("\n\n")
           );
         }
         if (update.timeTrial) {
           groups.push(
-            `**Time Trial**\n - [${update.timeTrial.name}](${update.timeTrial.url})`
+            `**Time Trial**\n\n - [${update.timeTrial.name}](${update.timeTrial.url})`
           );
         }
         if (update.rcTimeTrial) {
           groups.push(
-            `**RC Bandito Time Trial**\n - [${update.rcTimeTrial.name}](${update.rcTimeTrial.url})`
+            `**RC Bandito Time Trial**\n\n - [${update.rcTimeTrial.name}](${update.rcTimeTrial.url})`
           );
         }
         if (update.premiumRace) {
           groups.push(
-            `**Premium Race**\n - [${update.premiumRace.name}](${update.premiumRace.url})`
+            `**Premium Race**\n\n - [${update.premiumRace.name}](${update.premiumRace.url})`
           );
         }
 
