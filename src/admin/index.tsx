@@ -2,11 +2,12 @@ import React from "react";
 import { Col, Container, Nav, Row } from "react-bootstrap";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
+import Vehicles from "../components/Vehicles";
 import "./index.scss";
+import Missions from "./pages/Missions";
 import UpdateEdit from "./pages/UpdateEdit";
 import Updates from "./pages/Updates";
 import VehicleEdit from "./pages/VehicleEdit";
-import Vehicles from "../components/Vehicles";
 
 function Admin() {
   return (
@@ -17,11 +18,8 @@ function Admin() {
             <Nav.Link as={Link} to="/admin/vehicles" eventKey="vehicles">
               Vehicles
             </Nav.Link>
-            <Nav.Link as={Link} to="/admin/businesses" eventKey="businesses">
-              Businesses
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin/properties" eventKey="properties">
-              Properties
+            <Nav.Link as={Link} to="/admin/missions" eventKey="missions">
+              Missions
             </Nav.Link>
             <Nav.Link as={Link} to="/admin/updates" eventKey="properties">
               Updates
@@ -39,6 +37,7 @@ function Admin() {
             <Route path="/admin/vehicles">
               <Vehicles admin />
             </Route>
+            <Route path="/admin/missions" component={Missions} />
             <Route path="/admin/updates/edit/:id?" component={UpdateEdit} />
             <Route path="/admin/updates" component={Updates} />
           </Switch>

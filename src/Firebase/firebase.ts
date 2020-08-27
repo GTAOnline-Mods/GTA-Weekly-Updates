@@ -2,6 +2,7 @@ import app from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/functions";
+import { Mission } from "../models/mission";
 import Update from "../models/update";
 import { Vehicle } from "../models/vehicle";
 
@@ -53,6 +54,7 @@ class Firebase {
 
   getUserDoc = async (userId: string) => {
     const snapshot = await this.db.collection("users").doc(userId).get();
+
     if (snapshot?.exists) {
       return snapshot;
     }
@@ -87,6 +89,7 @@ class Firebase {
 
   getVehicle = async (id: string) => {
     const doc = await this.db.collection("vehicles").doc(id).get();
+
     if (doc.exists) {
       return {
         ...(doc.data() as Vehicle),
@@ -95,6 +98,15 @@ class Firebase {
     } else {
       return null;
     }
+  };
+
+  getMissions = async () => {
+    const snapshot = await this.db.collection("missions").orderBy("name").get();
+
+    return snapshot!.docs.map((doc) => ({
+      ...(doc.data() as Mission),
+      docRef: doc.ref,
+    }));
   };
 }
 
