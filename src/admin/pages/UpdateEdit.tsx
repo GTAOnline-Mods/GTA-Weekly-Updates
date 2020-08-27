@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -280,6 +280,10 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
             `**Premium Race**\n - [${update.premiumRace.name}](${update.premiumRace.url})`
           );
         }
+
+        groups.push(
+          "View embedded updates [here](https://gtaonline-cf0ea.web.app/)."
+        );
 
         if (!update.redditThread) {
           this.props.redditClient
