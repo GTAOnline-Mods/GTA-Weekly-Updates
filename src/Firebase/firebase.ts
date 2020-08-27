@@ -6,7 +6,7 @@ import Update from "../models/update";
 import { Vehicle } from "../models/vehicle";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAuQm6JQ5NtDuPcxcOskE9TieIWgeNVTr8",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "gtaonline-cf0ea.firebaseapp.com",
   databaseURL: "https://gtaonline-cf0ea.firebaseio.com",
   projectId: "gtaonline-cf0ea",
