@@ -9,30 +9,31 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { bindActionCreators, compose, Dispatch } from "redux";
-import Snoowrap from "snoowrap";
+import Snoowrap, { SnoowrapOptions } from "snoowrap";
 import SearchInput, { SearchInputOption } from "../../components/SearchInput";
 import Firebase, { withFirebase } from "../../Firebase";
 import { Mission } from "../../models/mission";
 import Update, {
   BonusActivity,
   SaleItem,
-  UpdateItem
+  UpdateItem,
 } from "../../models/update";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
 import { setMissions } from "../../store/Missions";
 import {
   getMissionsAsSearchInputOptions,
-  getVehiclesAsSearchInputOptions
+  getVehiclesAsSearchInputOptions,
 } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
+import { setRedditClient } from "../../store/Reddit";
 import UpdateActivityEditor from "./UpdateActivityEditor";
 import "./UpdateEdit.scss";
 import UpdateItemEditor from "./UpdateItemEditor";
@@ -53,6 +54,7 @@ interface UpdateEditProps extends RouteComponentProps<UpdateEditMatch> {
   missionSearchInputOptions: SearchInputOption[];
   setMissions: typeof setMissions;
   redditClient: Snoowrap;
+  setRedditClient: typeof setRedditClient;
 }
 
 interface UpdateEditState {
@@ -111,6 +113,18 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
 
     if (!this.props.missions.length) {
       this.props.firebase!.getMissions().then(this.props.setMissions);
+    }
+
+    if (!this.props.redditClient) {
+      this.props
+        .firebase!.db.collection("configs")
+        .doc("reddit")
+        .get()
+        .then((snapshot) =>
+          this.props.setRedditClient(
+            new Snoowrap({ ...(snapshot.data()! as SnoowrapOptions) })
+          )
+        );
     }
   }
 
@@ -200,8 +214,6 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         ...u,
         date: firebase.firestore.Timestamp.fromDate(u.date),
       };
-
-      console.log(update);
 
       this.setState({
         loading: true,
@@ -660,6 +672,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       setUpdates,
       setVehicles,
       setMissions,
+      setRedditClient,
     },
     dispatch
   );
