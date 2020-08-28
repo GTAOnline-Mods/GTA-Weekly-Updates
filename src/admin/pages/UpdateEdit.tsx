@@ -34,6 +34,7 @@ import {
 } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
+import { setRedditClient } from "../../store/Reddit";
 import UpdateActivityEditor from "./UpdateActivityEditor";
 import "./UpdateEdit.scss";
 import UpdateItemEditor from "./UpdateItemEditor";
