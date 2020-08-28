@@ -77,7 +77,15 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
             >
               <Card.Body>
                 <Card.Title className="pb-2 d-flex justify-content-between">
-                  <span>Weekly Update</span>
+                  <span className="h4">
+                    <span
+                      className="d-block mb-2 text-muted"
+                      style={{ fontSize: "60%" }}
+                    >
+                      {update.date.toLocaleDateString()}
+                    </span>
+                    Weekly Update
+                  </span>
                   {update.redditThread && (
                     <Button
                       variant="link"
@@ -204,11 +212,6 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                   </div>
                 )}
               </Card.Body>
-              <Card.Footer>
-                <small className="text-muted">
-                  {update.date.toLocaleDateString()}
-                </small>
-              </Card.Footer>
             </Card>
           ))}
       </Container>
