@@ -1,4 +1,4 @@
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Container, ListGroup } from "react-bootstrap";
@@ -26,7 +26,12 @@ function Updates({ updates, setUpdates, firebase }: UpdatesProps) {
 
   return (
     <Container fluid className="p-2">
-      <h1>Updates</h1>
+      <div className="d-flex justify-content-between align-items-center px-4">
+        <h1>Updates</h1>
+        <Button variant="outline-dark" as={Link} to="/admin/updates/edit">
+          <FontAwesomeIcon icon={faPlusCircle} />
+        </Button>
+      </div>
       <br />
       <ListGroup>
         {updates
@@ -48,12 +53,6 @@ function Updates({ updates, setUpdates, firebase }: UpdatesProps) {
             </ListGroup.Item>
           ))}
       </ListGroup>
-      <br />
-      <div className="d-flex flex-row-reverse">
-        <Button variant="link" as={Link} to="/admin/updates/edit">
-          Add
-        </Button>
-      </div>
     </Container>
   );
 }

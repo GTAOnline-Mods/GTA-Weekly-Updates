@@ -1,4 +1,8 @@
-import { faSearch, faSync } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlusCircle,
+  faSearch,
+  faSync
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import {
@@ -85,17 +89,37 @@ function Missions({
               <FontAwesomeIcon icon={faSearch} />
             </InputGroup.Text>
           </InputGroup.Append>
-          <Button
-            variant="secondary"
-            onClick={getMissions}
-            style={{
-              backgroundColor: "#e9ecef",
-              borderColor: "#ced4da",
-              color: "black",
-            }}
-          >
-            <FontAwesomeIcon icon={faSync} />
-          </Button>
+          <InputGroup.Append>
+            <Button
+              variant="secondary"
+              onClick={getMissions}
+              style={{
+                backgroundColor: "#e9ecef",
+                borderColor: "#ced4da",
+                color: "black",
+              }}
+            >
+              <FontAwesomeIcon icon={faSync} />
+            </Button>
+          </InputGroup.Append>
+          <InputGroup.Append>
+            <Button
+              variant="secondary"
+              style={{
+                backgroundColor: "#e9ecef",
+                borderColor: "#ced4da",
+                color: "black",
+              }}
+              onClick={() => {
+                _setMission({
+                  name: "",
+                });
+                setActiveKey(missions.length.toString());
+              }}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
+            </Button>
+          </InputGroup.Append>
         </InputGroup>
       </div>
       <br />
@@ -124,19 +148,6 @@ function Missions({
         </Accordion>
       )}
       <br />
-      <div className="d-flex flex-row-reverse">
-        <Button
-          variant="link"
-          onClick={() => {
-            _setMission({
-              name: "",
-            });
-            setActiveKey(missions.length.toString());
-          }}
-        >
-          Add
-        </Button>
-      </div>
     </Container>
   );
 }

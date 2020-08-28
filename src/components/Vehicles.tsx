@@ -1,4 +1,9 @@
-import { faEdit, faSearch, faSync } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faPlusCircle,
+  faSearch,
+  faSync
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import {
@@ -68,18 +73,36 @@ function Vehicles({
               <FontAwesomeIcon icon={faSearch} />
             </InputGroup.Text>
           </InputGroup.Append>
+          <InputGroup.Append>
+            <Button
+              variant="secondary"
+              onClick={getVehicles}
+              style={{
+                backgroundColor: "#e9ecef",
+                borderColor: "#ced4da",
+                color: "black",
+              }}
+            >
+              <FontAwesomeIcon icon={faSync} />
+            </Button>
+          </InputGroup.Append>
+          <InputGroup.Append>
+            {admin && isAdmin && (
+              <Button
+                variant="secondary"
+                style={{
+                  backgroundColor: "#e9ecef",
+                  borderColor: "#ced4da",
+                  color: "black",
+                }}
+                as={Link}
+                to="/admin/vehicles/edit"
+              >
+                <FontAwesomeIcon icon={faPlusCircle} />
+              </Button>
+            )}
+          </InputGroup.Append>
         </InputGroup>
-        <Button
-          variant="secondary"
-          onClick={getVehicles}
-          style={{
-            backgroundColor: "#e9ecef",
-            borderColor: "#ced4da",
-            color: "black",
-          }}
-        >
-          <FontAwesomeIcon icon={faSync} />
-        </Button>
       </div>
       <br />
       {loading ? (
@@ -120,14 +143,6 @@ function Vehicles({
             </ListGroup.Item>
           ))}
         </ListGroup>
-      )}
-      <br />
-      {admin && isAdmin && (
-        <div className="d-flex flex-row-reverse">
-          <Button variant="link" as={Link} to="/admin/vehicles/edit">
-            Add
-          </Button>
-        </div>
       )}
     </Container>
   );
