@@ -27,13 +27,13 @@ import Update, {
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
 import { setMissions } from "../../store/Missions";
+import { setRedditClient } from "../../store/Reddit";
 import {
   getMissionsAsSearchInputOptions,
   getVehiclesAsSearchInputOptions,
 } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
-import { setRedditClient } from "../../store/Reddit";
 import UpdateActivityEditor from "./UpdateActivityEditor";
 import "./UpdateEdit.scss";
 import UpdateItemEditor from "./UpdateItemEditor";
@@ -268,15 +268,24 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
       const getSaleString = (item: SaleItem) => {
         const getPriceString = (price: number, saleAmount: number) =>
           (price * (1 - saleAmount / 100)).toLocaleString("en-US");
-        const priceString = item.tradePrice
-          ? `(GTA$ ${getPriceString(
-              item.price,
-              item.amount
-            )} / ${getPriceString(item.tradePrice, item.amount)})`
-          : `(GTA$ ${getPriceString(item.price, item.amount)})`;
+        let priceString = "";
+        if (item.price) {
+          priceString = item.tradePrice
+            ? ` (GTA$ ${getPriceString(
+                item.price,
+                item.amount
+              )} / ${getPriceString(item.tradePrice, item.amount)})`
+            : ` (GTA$ ${getPriceString(item.price, item.amount)})`;
+        } else if (item.minPrice && item.maxPrice) {
+          priceString = ` (GTA$ ${getPriceString(
+            item.minPrice,
+            item.amount
+          )} - ${getPriceString(item.maxPrice, item.amount)})`;
+        }
+
         return item.url
-          ? ` - ${item.amount}% off ${item.name} ${priceString} [↗](${item.url})`
-          : ` - ${item.amount}% off ${item.name} ${priceString}`;
+          ? ` - ${item.amount}% off ${item.name}${priceString} [↗](${item.url})`
+          : ` - ${item.amount}% off ${item.name}${priceString}`;
       };
 
       if (this.props.redditClient) {

@@ -44,8 +44,10 @@ export interface SaleItem extends UpdateItem {
 export interface UpdateItem {
   [name: string]: any;
   name: string;
-  price: number;
-  tradePrice: number;
+  price?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  tradePrice?: number;
   img?: string;
   shop?: string;
   url?: string;

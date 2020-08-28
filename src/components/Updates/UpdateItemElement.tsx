@@ -31,11 +31,15 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
           <p>
             {(item as SaleItem).amount ? (
               <span>
-                <del>GTA$ {item.price.toLocaleString()}</del> GTA${" "}
-                {(
-                  item.price *
-                  (1 - (item as SaleItem).amount / 100)
-                ).toLocaleString()}
+                {item.price && (
+                  <span>
+                    <del>GTA$ {item.price.toLocaleString()}</del> GTA${" "}
+                    {(
+                      item.price *
+                      (1 - (item as SaleItem).amount / 100)
+                    ).toLocaleString()}
+                  </span>
+                )}
                 {item.tradePrice && (
                   <span>
                     <br />
@@ -49,7 +53,17 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
                 )}
               </span>
             ) : (
-              <span>GTA$ {item.price.toLocaleString()}</span>
+              <span>
+                {item.price && "GTA$ " + item.price.toLocaleString()}
+                {item.tradePrice &&
+                  "\nGTA$ " + item.tradePrice.toLocaleString()}
+                {item.minPrice &&
+                  item.maxPrice &&
+                  "\nGTA$ " +
+                    item.minPrice.toLocaleString() +
+                    " - GTA$ " +
+                    item.maxPrice.toLocaleString()}
+              </span>
             )}
             {item.shop && (
               <span className="pt-2 mt-2">
