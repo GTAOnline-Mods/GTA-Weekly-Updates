@@ -70,7 +70,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
               style={{
                 minWidth: "300px",
                 width: "75%",
-                margin: "0 auto 5rem auto",
+                margin: "0 auto 40vh auto",
               }}
               data-aos="zoom-in-up"
               data-aos-duration="400"

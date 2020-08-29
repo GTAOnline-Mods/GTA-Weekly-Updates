@@ -26,7 +26,7 @@
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
     "@types/reselect": "^2.2.0",
-    "aos": "^2.3.4",
+    "aos": "^3.0.0-beta.6",
     "bootstrap": "^4.5.2",
     "firebase": "^7.17.2",
     "lodash": "^4.17.20",
