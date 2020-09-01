@@ -1,0 +1,110 @@
+$rockstar-yellow: #f99c1c;
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -100;
+  background-color: #f99c1c;
+  background-image: url("https://images.alphacoders.com/589/589959.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 80%;
+}
+
+.update {
+  margin-bottom: 4rem;
+
+  /* set margin on external link icons so they 
+  may be used freely within .update */
+  & [data-icon="external-link-alt"] {
+    margin-left: 0.5rem;
+  }
+
+  & section:not(:last-of-type) {
+    margin-bottom: 1rem;
+  }
+}
+
+
+.update [data-icon="external-link-alt"] {
+  margin-left: 0.5rem;
+}
+
+.update-item-list {
+  display: flex;
+  flex-flow: column nowrap;
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0;
+  max-width: max-content;
+}
+.update-item-list > li {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.08rem;
+
+  /* event is applied to <li>, so give it hover */
+  &:hover > span {
+    background: #FDCD82;
+  }
+  & > span {
+    padding: 0 0.5rem;
+    transition: .25s all;
+  }
+}
+.update-item-list > li .svg-inline--fa {
+  margin-right: 0.5rem;
+}
+@media screen and (min-width: 768px) {
+  .update-item-list {
+    padding-left: 2rem;
+  }
+}
+
+.update-title {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+}
+.update-title__topic {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+.update-title__topic {
+  order: 2;
+}
+.update-title__date {
+  order: 1;
+  font-size: 1.4rem;
+  text-align: center;
+  width: 100%;
+}
+.update-title__link {
+  order: 3;
+}
+.update-title__link--text {
+  font-size: 0.9rem;
+}
+@media screen and (min-width:768px) {
+  .update-title {
+    justify-content: space-between;
+  }
+  .update-title__topic {
+    order: 1;
+    width: auto;
+  }
+  .update-title__date {
+    order: 2;
+    width: auto;
+  }
+  .update-title__link {
+    order: 3;
+    width: auto;
+  }
+}
+

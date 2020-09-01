@@ -37,8 +37,9 @@ const SignUp = ({
 
   return (
     <Container fluid>
+      <div className="yellow-overlay"></div>
       <h1>Sign Up</h1>
-      <div style={{ height: "7vh" }} />
+      <div style={{ height: "6rem" }} />
       <Form
         noValidate
         validated={password !== "" && password === passwordConfirmation}

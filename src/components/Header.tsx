@@ -6,6 +6,7 @@ import { bindActionCreators, compose, Dispatch } from "redux";
 import Firebase, { withFirebase } from "../Firebase";
 import { RootState } from "../store";
 import { setIsAdmin, setLoggedIn } from "../store/User";
+import "./Header.scss";
 
 interface HeaderProps {
   firebase?: Firebase;
@@ -33,7 +34,7 @@ function Header({
   };
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar collapseOnSelect expand="lg" variant="dark">
       <Navbar.Brand as={Link} to="/">
         <img
           alt="GTAOnline Weekly Updates"

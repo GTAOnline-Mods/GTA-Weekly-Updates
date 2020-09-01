@@ -1,4 +1,4 @@
-import { faExternalLinkAlt, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
@@ -17,14 +17,16 @@ function UpdateActivityElement({ activity }: UpdateActivityElementProps) {
   return (
     <React.Fragment>
       <li onClick={handleShow}>
-        {activity.moneyAmount === activity.rpAmount
-          ? activity.moneyAmount + "x GTA$ and RP"
-          : activity.moneyAmount +
-            "x GTA$ and " +
-            activity.rpAmount +
-            "x RP"}{" "}
-        on {activity.name + " "}
-        <FontAwesomeIcon icon={faEye} />
+        <FontAwesomeIcon icon={faInfoCircle} />
+        <span>
+          {activity.moneyAmount === activity.rpAmount
+            ? activity.moneyAmount + "x GTA$ and RP"
+            : activity.moneyAmount +
+              "x GTA$ and " +
+              activity.rpAmount +
+              "x RP"}{" "}
+          on {activity.name + " "}
+        </span>
       </li>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>

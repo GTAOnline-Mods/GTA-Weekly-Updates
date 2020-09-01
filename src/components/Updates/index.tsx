@@ -15,6 +15,7 @@ import { RootState } from "../../store";
 import { setUpdates } from "../../store/Updates";
 import UpdateActivityElement from "./UpdateActivityElement";
 import UpdateItemElement from "./UpdateItemElement";
+import "./index.scss";
 
 interface UpdatesProps {
   firebase?: Firebase;
@@ -38,27 +39,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
 
   if (!loading) {
     return (
-      <Container fluid="sm" className="justify-content-center">
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-            .background {
-              position: fixed;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              z-index: -100;
-              background-color: #f99c1c;
-              background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Rockstar_Games_Logo.svg/1113px-Rockstar_Games_Logo.svg.png");
-              background-size: 50px 50px;
-              opacity: 30%;
-            }
-
-            .yellow-overlay { display: none; }
-            `,
-          }}
-        />
+      <Container className="updates justify-content-center p-0">
         <div className="background" />
         {updates
           .sort((u1, u2) =>
@@ -66,65 +47,75 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
           )
           .map((update: Update, index: number) => (
             <Card
+              className="update"
               key={index}
-              style={{
-                minWidth: "300px",
-                width: "75%",
-                margin: "0 auto 40vh auto",
-              }}
               data-aos="zoom-in-up"
               data-aos-duration="400"
             >
-              <Card.Body>
-                <Card.Title className="pb-2 d-flex justify-content-between">
-                  <span className="h4">
-                    <span
-                      className="d-block mb-2 text-muted"
-                      style={{ fontSize: "60%" }}
-                    >
-                      {update.date.toLocaleDateString()}
-                    </span>
+              <Card.Header
+                className="update-title"
+              >
+                  <span
+                    className="update-title__topic text-muted"
+                  >
                     Weekly Update
                   </span>
-                  {update.redditThread && (
-                    <Button
-                      variant="link"
-                      href={
-                        "https://reddit.com/r/gtaonline/comments/" +
-                        update.redditThread
-                      }
-                      target="_blank"
-                    >
-                      <FontAwesomeIcon icon={faExternalLinkAlt} />
-                    </Button>
-                  )}
-                </Card.Title>
+                  <span
+                    className="update-title__date"
+                  >
+                    {update.date.toLocaleString('default', { 
+                      month: 'long', day: 'numeric', year: 'numeric' 
+                    })}
+                  </span>
+                  <span
+                    className="update-title__link"
+                  >
+                    {update.redditThread && (
+                      <Button
+                        variant="link"
+                        href={
+                          "https://reddit.com/r/gtaonline/comments/" +
+                          update.redditThread
+                        }
+                        target="_blank"
+                      >
+                        <span
+                          className="update-title__link--text"
+                        >
+                          /r/gtaonline
+                        </span>
+                        <FontAwesomeIcon icon={faExternalLinkAlt} />
+                      </Button>
+                    )}
+                  </span>
+              </Card.Header>
+              <Card.Body>
                 {update.podium && (
-                  <span>
+                  <section className="update-section update-section__podium-vehicle">
                     <b>Podium Vehicle</b>
                     <br />
-                    <ul>
+                    <ul className="update-item-list">
                       <UpdateItemElement
                         key={update.podium.item.id}
                         item={update.podium}
                       />
                     </ul>
-                  </span>
+                  </section>
                 )}
                 {update.new.length !== 0 && (
-                  <React.Fragment>
+                  <section className="update-section update-section__new-content">
                     <b>New Content</b>
-                    <ul>
+                    <ul className="update-item-list">
                       {update.new.map((item: UpdateItem) => (
                         <UpdateItemElement key={item.item.id} item={item} />
                       ))}
                     </ul>
-                  </React.Fragment>
+                  </section>
                 )}
                 {update.bonusActivities.length !== 0 && (
-                  <React.Fragment>
+                  <section className="update-section update-section__bonus-activites">
                     <b>Bonus GTA$ and RP Activities</b>
-                    <ul>
+                    <ul className="update-item-list">
                       {update.bonusActivities.map((activity: BonusActivity) => (
                         <UpdateActivityElement
                           key={activity.activity.id}
@@ -132,40 +123,40 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                         />
                       ))}
                     </ul>
-                  </React.Fragment>
+                  </section>
                 )}
                 {update.sale.length !== 0 && (
-                  <React.Fragment>
+                  <section className="update-section update-section__discounts">
                     <b>Discounts</b>
-                    <ul>
+                    <ul className="update-item-list">
                       {update.sale.map((item: SaleItem) => (
                         <UpdateItemElement key={item.item.id} item={item} />
                       ))}
                     </ul>
-                  </React.Fragment>
+                  </section>
                 )}
                 {update.twitchPrime.length !== 0 && (
-                  <React.Fragment>
+                  <section className="update-section update-section__twitch-prime">
                     <b>Twitch Prime Bonuses</b>
-                    <ul>
+                    <ul className="update-item-list">
                       {update.twitchPrime.map((item: SaleItem) => (
                         <UpdateItemElement key={item.item.id} item={item} />
                       ))}
                     </ul>
-                  </React.Fragment>
+                  </section>
                 )}
                 {update.targetedSale.length !== 0 && (
-                  <React.Fragment>
+                  <section className="update-section update-section__targeted-sales">
                     <b>Targeted Sales</b>
-                    <ul>
+                    <ul className="update-item-list">
                       {update.targetedSale.map((item: SaleItem) => (
                         <UpdateItemElement key={item.item.id} item={item} />
                       ))}
                     </ul>
-                  </React.Fragment>
+                  </section>
                 )}
                 {update.timeTrial && (
-                  <div>
+                  <section className="update-section update-section__time-trial">
                     <p>
                       <b>Time Trial</b>
                       <br />
@@ -176,12 +167,13 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                       >
                         {update.timeTrial.name}, Par Time{" "}
                         {update.timeTrial.parTime}
+                        <FontAwesomeIcon icon={faExternalLinkAlt} />
                       </a>
                     </p>
-                  </div>
+                  </section>
                 )}
                 {update.rcTimeTrial && (
-                  <div>
+                  <section className="update-section update-section__rc-time-trial">
                     <p>
                       <b>RC Bandito Time Trial</b>
                       <br />
@@ -192,12 +184,13 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                       >
                         {update.rcTimeTrial.name}, Par Time{" "}
                         {update.rcTimeTrial.parTime}
+                        <FontAwesomeIcon icon={faExternalLinkAlt} />
                       </a>
                     </p>
-                  </div>
+                  </section>
                 )}
                 {update.premiumRace && (
-                  <div>
+                  <section className="update-section update-section__premium-race">
                     <p>
                       <b>Premium Race</b>
                       <br />
@@ -209,7 +202,7 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                         {update.premiumRace.name}
                       </a>
                     </p>
-                  </div>
+                  </section>
                 )}
               </Card.Body>
             </Card>

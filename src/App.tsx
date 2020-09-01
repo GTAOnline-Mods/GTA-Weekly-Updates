@@ -74,7 +74,6 @@ function App({
   return (
     <React.Fragment>
       <Header />
-      <div className="yellow-overlay" />
       <Switch>
         <Route path="/" exact>
           <Container fluid>

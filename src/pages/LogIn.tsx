@@ -71,6 +71,7 @@ const LogIn = ({
 
   return (
     <Container fluid>
+      <div className="yellow-overlay"></div>
       <h1>Login</h1>
       <div style={{ height: "6rem" }} />
       <Form noValidate validated onSubmit={logIn}>

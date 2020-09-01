@@ -55,6 +55,7 @@ function VehicleView({
   if (vehicle) {
     return (
       <Container fluid>
+        <div className="yellow-overlay"></div>
         <div className="d-flex justify-content-between">
           <h2 className="pricedown">{vehicle.manufacturer}</h2>
           {isAdmin && (

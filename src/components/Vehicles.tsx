@@ -56,6 +56,7 @@ function Vehicles({
 
   return (
     <Container fluid className="p-2">
+      <div className="yellow-overlay"></div>
       <h1>Vehicles</h1>
       <br />
       <div className="d-flex mb-3">
