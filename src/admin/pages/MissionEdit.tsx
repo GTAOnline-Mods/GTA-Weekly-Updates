@@ -27,9 +27,13 @@ function MissionEdit({
 
   const debouncedSave = React.useCallback(
     _.debounce((m: Mission) => {
+      if (!m.name) {
+        return;
+      }
+
       setLoading(true);
       setMission(m).then(() => setLoading(false));
-    }, 1000),
+    }, 250),
     []
   );
 
@@ -49,11 +53,7 @@ function MissionEdit({
     <Card>
       <Card.Header className="d-flex justify-content-between align-items-center">
         <span>{mission.name}</span>
-        <Accordion.Toggle
-          as={Button}
-          variant="link"
-          eventKey={`${index}`}
-        >
+        <Accordion.Toggle as={Button} variant="link" eventKey={`${index}`}>
           <FontAwesomeIcon icon={faEdit} />
         </Accordion.Toggle>
       </Card.Header>
@@ -62,6 +62,7 @@ function MissionEdit({
           <Form className="mt-2" onSubmit={(e) => e.preventDefault()}>
             <Form.Row className="mb-2">
               <Form.Group as={Col}>
+                <Form.Label>Name *</Form.Label>
                 <Form.Control
                   placeholder="Name"
                   name="name"
@@ -70,6 +71,7 @@ function MissionEdit({
                 />
               </Form.Group>
               <Form.Group as={Col}>
+                <Form.Label>URL</Form.Label>
                 <Form.Control
                   placeholder="URL"
                   name="url"
@@ -80,6 +82,7 @@ function MissionEdit({
             </Form.Row>
             <Form.Row className="mb-2">
               <Form.Group as={Col}>
+                <Form.Label>Pay</Form.Label>
                 <Form.Control
                   placeholder="Pay"
                   name="pay"
@@ -91,8 +94,9 @@ function MissionEdit({
             </Form.Row>
             <Form.Row className="mb-2">
               <Form.Group as={Col}>
+                <Form.Label>Minimum Pay</Form.Label>
                 <Form.Control
-                  placeholder="Min Pay"
+                  placeholder="Minimum Pay"
                   name="minPay"
                   type="number"
                   value={localMission.minPay}
@@ -100,8 +104,9 @@ function MissionEdit({
                 />
               </Form.Group>
               <Form.Group as={Col}>
+                <Form.Label>Maximum Pay</Form.Label>
                 <Form.Control
-                  placeholder="Max Pay"
+                  placeholder="Maximum Pay"
                   name="maxPay"
                   type="number"
                   value={localMission.maxPay}
@@ -116,6 +121,9 @@ function MissionEdit({
                 <span className="sr-only">Loading...</span>
               </Spinner>
             )}
+            <span className="text-muted mr-auto">
+              Fields marked with * are required.
+            </span>
           </div>
         </Card.Body>
       </Accordion.Collapse>
