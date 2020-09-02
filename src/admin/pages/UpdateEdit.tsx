@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -22,7 +22,7 @@ import { Mission } from "../../models/mission";
 import Update, {
   BonusActivity,
   SaleItem,
-  UpdateItem
+  UpdateItem,
 } from "../../models/update";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
@@ -30,10 +30,11 @@ import { setMissions } from "../../store/Missions";
 import { setRedditClient } from "../../store/Reddit";
 import {
   getMissionsAsSearchInputOptions,
-  getVehiclesAsSearchInputOptions
+  getVehiclesAsSearchInputOptions,
 } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
+import { mergeArrays, mergeObject } from "../../utils";
 import UpdateActivityEditor from "./UpdateActivityEditor";
 import "./UpdateEdit.scss";
 import UpdateItemEditor from "./UpdateItemEditor";
@@ -61,6 +62,8 @@ interface UpdateEditState {
   update?: Update;
   updateExists: boolean;
   loading: boolean;
+  unsubscribe?: () => void;
+  handledInitialSnapshot: boolean;
 }
 
 class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
@@ -70,29 +73,138 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
     this.state = {
       updateExists: true,
       loading: false,
+      handledInitialSnapshot: false,
     };
+  }
+
+  async componentDidUpdate(
+    _prevProps: UpdateEditProps,
+    prevState: UpdateEditState
+  ) {
+    if (prevState.update !== this.state.update && !this.state.unsubscribe) {
+      const unsubscribe = this.state.update?.docRef?.onSnapshot((doc) => {
+        if (!this.state.handledInitialSnapshot) {
+          this.setState({ handledInitialSnapshot: true });
+          return;
+        }
+        // last known server state
+        const storeUpdate = this.props.updates.find(
+          (u) => u.docRef?.id === this.props.match.params.id
+        );
+        // latest server state, modified by other users
+        const newUpdate = {
+          ...(doc.data() as Update),
+          bonusActivities: doc.data()!.bonusActivities || [],
+          date: new Date(doc.data()!.date.seconds * 1000),
+          docRef: doc.ref,
+        };
+
+        const podium = mergeObject(
+          storeUpdate?.podium || {},
+          this.state.update!.podium || {},
+          newUpdate.podium || {}
+        );
+
+        const timeTrial = mergeObject(
+          storeUpdate?.timeTrial || {},
+          this.state.update!.timeTrial || {},
+          newUpdate.timeTrial || {}
+        );
+
+        const rcTimeTrial = mergeObject(
+          storeUpdate?.rcTimeTrial || {},
+          this.state.update!.rcTimeTrial || {},
+          newUpdate.rcTimeTrial || {}
+        );
+
+        const premiumRace = mergeObject(
+          storeUpdate?.premiumRace || {},
+          this.state.update!.premiumRace || {},
+          newUpdate.premiumRace || {}
+        );
+
+        const targetUpdate = {
+          ...this.state.update!,
+          date:
+            this.state.update!.date !== storeUpdate?.date
+              ? this.state.update!.date
+              : newUpdate.date,
+          podium: !_.isEmpty(podium) ? podium : undefined,
+          new: mergeArrays(
+            storeUpdate?.new || [],
+            this.state.update!.new,
+            newUpdate.new,
+            (i) => i.item.id
+          ),
+          bonusActivities: mergeArrays(
+            storeUpdate?.bonusActivities || [],
+            this.state.update!.bonusActivities,
+            newUpdate.bonusActivities,
+            (i) => i.activity.id
+          ),
+          sale: mergeArrays(
+            storeUpdate?.sale || [],
+            this.state.update!.sale,
+            newUpdate.sale,
+            (i) => i.item.id
+          ),
+          targetedSale: mergeArrays(
+            storeUpdate?.targetedSale || [],
+            this.state.update!.targetedSale,
+            newUpdate.targetedSale,
+            (i) => i.item.id
+          ),
+          twitchPrime: mergeArrays(
+            storeUpdate?.twitchPrime || [],
+            this.state.update!.twitchPrime,
+            newUpdate.twitchPrime,
+            (i) => i.item.id
+          ),
+          timeTrial: !_.isEmpty(timeTrial) ? timeTrial : undefined,
+          rcTimeTrial: !_.isEmpty(rcTimeTrial) ? rcTimeTrial : undefined,
+          premiumRace: !_.isEmpty(premiumRace) ? premiumRace : undefined,
+          redditThread:
+            storeUpdate?.redditThread ||
+            this.state.update!.redditThread ||
+            newUpdate.redditThread,
+        };
+
+        this.setState({ update: targetUpdate as Update });
+      });
+      this.setState({
+        unsubscribe,
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.unsubscribe) this.state.unsubscribe();
   }
 
   async componentDidMount() {
     if (this.props.match.params.id) {
-      if (!this.props.updates.length) {
-        const u = await this.props.firebase!.getUpdates();
-        this.props.setUpdates(u);
-      }
-
       const update = this.props.updates.filter(
         (u) => u.docRef?.id === this.props.match.params.id
       );
-
       if (update.length) {
         this.setState({
           update: update[0],
         });
       } else {
-        this.setState({
-          updateExists: false,
-        });
-        return;
+        const u = await this.props.firebase!.getUpdate(
+          this.props.match.params.id
+        );
+        if (u) {
+          this.props.setUpdate(u);
+          this.setState({
+            update: u,
+          });
+        } else {
+          this.setState({
+            updateExists: false,
+          });
+          return;
+        }
       }
     } else {
       this.setState({
@@ -224,12 +336,16 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           ? resp.name.substring(3)
           : resp.json.data.things[0].id;
 
+        const cleanedUpdate = _({
+          ...update,
+          redditThread: id,
+        })
+          .omitBy(_.isUndefined)
+          .value();
+
         if (docRef) {
           docRef!
-            .update({
-              ...update,
-              redditThread: id,
-            })
+            .update(cleanedUpdate)
             .then(() => {
               const u = {
                 ...this.state.update!!,
@@ -245,10 +361,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         } else {
           this.props.firebase?.db
             .collection("updates")
-            .add({
-              ...update,
-              redditThread: id,
-            })
+            .add(cleanedUpdate)
             .then((ref: firebase.firestore.DocumentReference) => {
               const u = {
                 ...this.state.update!!,
@@ -394,9 +507,9 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
         }
       }
     }
-  }, 2000);
+  }, 250);
 
-  debouncedSave = _.debounce(this.saveUpdate, 5000);
+  debouncedSave = _.debounce(this.saveUpdate, 250);
 
   // tslint:disable-next-line: max-func-body-length
   render() {
@@ -629,7 +742,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                       <InputGroup.Text>Premium Race</InputGroup.Text>
                     </InputGroup.Prepend>
                     <FormControl
-                      value={update.premiumRace?.url}
+                      value={update.premiumRace?.name}
                       placeholder="Name"
                       onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                         this.setValue("premiumRace", {

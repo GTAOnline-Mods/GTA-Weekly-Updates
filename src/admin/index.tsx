@@ -11,8 +11,8 @@ import VehicleEdit from "./pages/VehicleEdit";
 
 function Admin() {
   return (
-    <Container fluid className="p-0 h-100">
-      <Row className="h-100 align-items-stretch">
+    <Container fluid className="p-0">
+      <Row className="align-items-stretch">
         <Col md={3} sm={12} lg={2}>
           <Nav className="flex-md-column admin-nav h-100 p-2">
             <Nav.Link as={Link} to="/admin/vehicles" eventKey="vehicles">

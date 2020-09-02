@@ -17,9 +17,9 @@ interface SearchInputProps {
 
 function SearchInput({ options, onSelect, multi, selected }: SearchInputProps) {
   const [search, setSearch] = React.useState("");
-  const [selection, setSelection] = React.useState<SearchInputOption | null>(
-    selected || null
-  );
+  const [selection, setSelection] = React.useState<SearchInputOption | null>();
+
+  React.useEffect(() => setSelection(selected || null), [selected]);
 
   return (
     <React.Fragment>
