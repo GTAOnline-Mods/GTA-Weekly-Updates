@@ -105,6 +105,10 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
     if (this.state.vehicle) {
       const { docRef, ...v } = this.state.vehicle;
 
+      if (!this.state.vehicle.name || !this.state.vehicle.price) {
+        return;
+      }
+
       this.setState({
         loading: true,
       });
@@ -137,9 +141,9 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
           .catch(console.error);
       }
     }
-  }, 2000);
+  }, 250);
 
-  debouncedSave = _.debounce(this.saveVehicle, 5000);
+  debouncedSave = _.debounce(this.saveVehicle, 250);
 
   render() {
     const {
@@ -167,6 +171,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
             <Form className="mt-2" onSubmit={(e) => e.preventDefault()}>
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
+                  <Form.Label>Manufacturer</Form.Label>
                   <Form.Control
                     placeholder="Manufacturer"
                     name="manufacturer"
@@ -175,6 +180,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
                   />
                 </Form.Group>
                 <Form.Group as={Col}>
+                  <Form.Label>Name *</Form.Label>
                   <Form.Control
                     placeholder="Name"
                     name="name"
@@ -191,6 +197,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
               </Form.Row>
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
+                  <Form.Label>Image</Form.Label>
                   <Form.Control
                     placeholder="Image"
                     name="img"
@@ -202,7 +209,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
                   <div className="d-flex align-items-center justify-content-between mb-2">
-                    <Form.Label className="m-0 px-4">Price</Form.Label>
+                    <Form.Label className="m-0 px-4">Price *</Form.Label>
                     <Form.Control
                       placeholder="Price"
                       className="w-75"
@@ -248,6 +255,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
               </Form.Row>
               <Form.Row className="mb-2">
                 <Form.Group as={Col}>
+                  <Form.Label>URL</Form.Label>
                   <Form.Control
                     placeholder="URL"
                     name="url"
@@ -257,7 +265,7 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
                 </Form.Group>
               </Form.Row>
             </Form>
-            <div className="d-flex flex-row-reverse">
+            <div className="d-flex flex-row-reverse align-items-center">
               <Button onClick={this.saveVehicle} className="rockstar-yellow">
                 Save
               </Button>
@@ -266,6 +274,9 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
                   <span className="sr-only">Loading...</span>
                 </Spinner>
               )}
+              <span className="text-muted mr-auto">
+                Fields marked with * are required.
+              </span>
             </div>
           </div>
         ) : match.params.id && !vehicleExists ? (
