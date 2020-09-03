@@ -72,57 +72,57 @@ function Missions({
 
   return (
     <Container fluid className="p-2">
-      <h1>Missions</h1>
-      <br />
-      <div className="d-flex mb-3">
-        <InputGroup>
-          <FormControl
-            placeholder="Mission Name"
-            aria-label="Mission Name"
-            aria-describedby="search"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setSearch(event.target.value)
-            }
-          />
-          <InputGroup.Append>
-            <InputGroup.Text id="search">
-              <FontAwesomeIcon icon={faSearch} />
-            </InputGroup.Text>
-          </InputGroup.Append>
-          <InputGroup.Append>
-            <Button
-              variant="secondary"
-              onClick={getMissions}
-              style={{
-                backgroundColor: "#e9ecef",
-                borderColor: "#ced4da",
-                color: "black",
-              }}
-            >
-              <FontAwesomeIcon icon={faSync} />
-            </Button>
-          </InputGroup.Append>
-          <InputGroup.Append>
-            <Button
-              variant="secondary"
-              style={{
-                backgroundColor: "#e9ecef",
-                borderColor: "#ced4da",
-                color: "black",
-              }}
-              onClick={() => {
-                _setMission({
-                  name: "",
-                });
-                setActiveKey(missions.length.toString());
-              }}
-            >
-              <FontAwesomeIcon icon={faPlusCircle} />
-            </Button>
-          </InputGroup.Append>
-        </InputGroup>
+      <div className="admin-header">
+        <h1>Missions</h1>
+        <div className="d-flex mb-3">
+          <InputGroup>
+            <FormControl
+              placeholder="Mission Name"
+              aria-label="Mission Name"
+              aria-describedby="search"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setSearch(event.target.value)
+              }
+            />
+            <InputGroup.Append>
+              <InputGroup.Text id="search">
+                <FontAwesomeIcon icon={faSearch} />
+              </InputGroup.Text>
+            </InputGroup.Append>
+            <InputGroup.Append>
+              <Button
+                variant="secondary"
+                onClick={getMissions}
+                style={{
+                  backgroundColor: "#e9ecef",
+                  borderColor: "#ced4da",
+                  color: "black",
+                }}
+              >
+                <FontAwesomeIcon icon={faSync} />
+              </Button>
+            </InputGroup.Append>
+            <InputGroup.Append>
+              <Button
+                variant="secondary"
+                style={{
+                  backgroundColor: "#e9ecef",
+                  borderColor: "#ced4da",
+                  color: "black",
+                }}
+                onClick={() => {
+                  _setMission({
+                    name: "",
+                  });
+                  setActiveKey(missions.length.toString());
+                }}
+              >
+                <FontAwesomeIcon icon={faPlusCircle} />
+              </Button>
+            </InputGroup.Append>
+          </InputGroup>
+        </div>
       </div>
-      <br />
       {loading ? (
         <div className="d-flex justify-content-center">
           <Spinner animation="border" role="status">

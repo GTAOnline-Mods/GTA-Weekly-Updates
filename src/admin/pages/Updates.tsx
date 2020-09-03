@@ -26,13 +26,14 @@ function Updates({ updates, setUpdates, firebase }: UpdatesProps) {
 
   return (
     <Container fluid className="p-2">
-      <div className="d-flex justify-content-between align-items-center px-4">
+      <div className="admin-header">
         <h1>Updates</h1>
-        <Button variant="outline-dark" as={Link} to="/admin/updates/edit">
-          <FontAwesomeIcon icon={faPlusCircle} />
-        </Button>
+        <div className="d-flex align-items-center mb-3">
+          <Button variant="outline-dark" as={Link} to="/admin/updates/edit">
+            <FontAwesomeIcon icon={faPlusCircle} /> New update
+          </Button>
+        </div>
       </div>
-      <br />
       <ListGroup>
         {updates
           .sort((u1, u2) =>

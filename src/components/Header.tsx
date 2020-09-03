@@ -38,7 +38,7 @@ function Header({
       <Navbar.Brand as={Link} to="/">
         <img
           alt="GTAOnline Weekly Updates"
-          src="res/img/community_icon.png"
+          src="/res/img/community_icon.png"
           width="30"
           height="30"
           className="d-inline-block align-top"
