@@ -9,7 +9,7 @@ import {
   FormControl,
   InputGroup,
   ListGroup,
-  Spinner,
+  Spinner
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -22,7 +22,7 @@ import { Mission } from "../../models/mission";
 import Update, {
   BonusActivity,
   SaleItem,
-  UpdateItem,
+  UpdateItem
 } from "../../models/update";
 import UpdatePost from "../../models/UpdatePost";
 import { Vehicle } from "../../models/vehicle";
@@ -31,7 +31,7 @@ import { setMissions } from "../../store/Missions";
 import { setRedditClient } from "../../store/Reddit";
 import {
   getMissionsAsSearchInputOptions,
-  getVehiclesAsSearchInputOptions,
+  getVehiclesAsSearchInputOptions
 } from "../../store/selectors";
 import { setUpdate, setUpdates } from "../../store/Updates";
 import { setVehicles } from "../../store/Vehicles";
@@ -345,13 +345,6 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
           .omitBy(_.isUndefined)
           .value();
 
-        const cleanedUpdate = _({
-          ...update,
-          redditThread: id,
-        })
-          .omitBy(_.isUndefined)
-          .value();
-
         if (docRef) {
           docRef!
             .update(cleanedUpdate)
@@ -457,21 +450,19 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
                     name="newswire"
                     value={update.newswire?.url || ""}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      {
-                        const { value } = event.target;
-                        fetch("https://cors-anywhere.herokuapp.com/" + value)
-                          .then((response) => response.text())
-                          .then((text) => {
-                            const parsed = new DOMParser().parseFromString(
-                              text,
-                              "text/html"
-                            );
-                            this.setValue("newswire", {
-                              url: value,
-                              title: parsed.title,
-                            });
+                      const { value } = event.target;
+                      fetch("https://cors-anywhere.herokuapp.com/" + value)
+                        .then((response) => response.text())
+                        .then((text) => {
+                          const parsed = new DOMParser().parseFromString(
+                            text,
+                            "text/html"
+                          );
+                          this.setValue("newswire", {
+                            url: value,
+                            title: parsed.title,
                           });
-                      }
+                        });
                     }}
                   />
                 </Form.Group>
