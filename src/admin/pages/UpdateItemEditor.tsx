@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, FormControl, InputGroup, ListGroup } from "react-bootstrap";
 import { SaleItem, UpdateItem } from "../../models/update";
+import { safeInt } from "../../utils";
 
 interface UpdateItemEditorProps {
   item: UpdateItem | SaleItem;
@@ -32,10 +33,10 @@ function UpdateItemEditor({
           <FormControl
             value={(item as SaleItem).amount}
             style={{ maxWidth: "80px" }}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={({ target }: React.ChangeEvent<HTMLInputElement>) =>
               setItem({
                 ...item,
-                amount: parseInt(event.target.value),
+                amount: safeInt(target.value, (item as SaleItem).amount),
               })
             }
             aria-label={sale ? "sale-item" : "update-item"}
@@ -46,10 +47,11 @@ function UpdateItemEditor({
           {sale && (
             <InputGroup.Text>
               GTA${" "}
-              {price && (
-                price *
-                (1 - (item as SaleItem).amount / 100)
-              ).toLocaleString()}
+              {price &&
+                (
+                  price *
+                  (1 - (item as SaleItem).amount / 100)
+                ).toLocaleString()}
             </InputGroup.Text>
           )}
           <Button

@@ -1,6 +1,9 @@
 @import "../../index.scss";
 
 .react-datepicker-wrapper {
+  @extend .mb-2;
+  @extend .d-block;
+
   .react-datepicker__input-container > input {
     @extend .form-control;
   }

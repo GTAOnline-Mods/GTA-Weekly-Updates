@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, FormControl, InputGroup, ListGroup } from "react-bootstrap";
 import { BonusActivity } from "../../models/update";
+import { safeInt } from "../../utils";
 
 interface UpdateActivityEditorProps {
   activity: BonusActivity;
@@ -22,10 +23,10 @@ function UpdateActivityEditor({
         <FormControl
           value={activity.moneyAmount}
           style={{ maxWidth: "50px" }}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={({ target }: React.ChangeEvent<HTMLInputElement>) =>
             setActivity({
               ...activity,
-              moneyAmount: parseInt(event.target.value),
+              moneyAmount: safeInt(target.value, activity.moneyAmount),
             })
           }
           aria-label={"bonus-activity"}
@@ -36,10 +37,10 @@ function UpdateActivityEditor({
         <FormControl
           value={activity.rpAmount}
           style={{ maxWidth: "50px" }}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={({ target }: React.ChangeEvent<HTMLInputElement>) =>
             setActivity({
               ...activity,
-              rpAmount: parseInt(event.target.value),
+              rpAmount: safeInt(target.value, activity.rpAmount),
             })
           }
           aria-label={"bonus-activity"}

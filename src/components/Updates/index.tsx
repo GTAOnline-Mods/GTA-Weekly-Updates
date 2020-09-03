@@ -13,9 +13,9 @@ import Update, {
 } from "../../models/update";
 import { RootState } from "../../store";
 import { setUpdates } from "../../store/Updates";
+import "./index.scss";
 import UpdateActivityElement from "./UpdateActivityElement";
 import UpdateItemElement from "./UpdateItemElement";
-import "./index.scss";
 
 interface UpdatesProps {
   firebase?: Firebase;
@@ -52,42 +52,34 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
               data-aos="zoom-in-up"
               data-aos-duration="400"
             >
-              <Card.Header
-                className="update-title"
-              >
-                  <span
-                    className="update-title__topic text-muted"
-                  >
-                    Weekly Update
-                  </span>
-                  <span
-                    className="update-title__date"
-                  >
-                    {update.date.toLocaleString('default', { 
-                      month: 'long', day: 'numeric', year: 'numeric' 
-                    })}
-                  </span>
-                  <span
-                    className="update-title__link"
-                  >
-                    {update.redditThread && (
-                      <Button
-                        variant="link"
-                        href={
-                          "https://reddit.com/r/gtaonline/comments/" +
-                          update.redditThread
-                        }
-                        target="_blank"
-                      >
-                        <span
-                          className="update-title__link--text"
-                        >
-                          /r/gtaonline
-                        </span>
-                        <FontAwesomeIcon icon={faExternalLinkAlt} />
-                      </Button>
-                    )}
-                  </span>
+              <Card.Header className="update-title">
+                <span className="update-title__topic text-muted">
+                  Weekly Update
+                </span>
+                <span className="update-title__date">
+                  {update.date.toLocaleString("default", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+                <span className="update-title__link">
+                  {update.redditThread && (
+                    <Button
+                      variant="link"
+                      href={
+                        "https://reddit.com/r/gtaonline/comments/" +
+                        update.redditThread
+                      }
+                      target="_blank"
+                    >
+                      <span className="update-title__link--text">
+                        /r/gtaonline
+                      </span>
+                      <FontAwesomeIcon icon={faExternalLinkAlt} />
+                    </Button>
+                  )}
+                </span>
               </Card.Header>
               <Card.Body>
                 {update.podium && (
@@ -200,6 +192,21 @@ const Updates = ({ firebase, updates, setUpdates }: UpdatesProps) => {
                         rel="noopener noreferrer"
                       >
                         {update.premiumRace.name}
+                      </a>
+                    </p>
+                  </section>
+                )}
+                {update.newswire && (
+                  <section>
+                    <p>
+                      <b>Rockstar Newswire</b>
+                      <br />
+                      <a
+                        href={update.newswire.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {update.newswire.title}
                       </a>
                     </p>
                   </section>

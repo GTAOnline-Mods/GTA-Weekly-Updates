@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 
 export interface Vehicle {
+  [name: string]: any;
   img?: string;
   manufacturer: string;
   name: string;

@@ -9,6 +9,7 @@ import Firebase, { withFirebase } from "../../Firebase";
 import { Vehicle } from "../../models/vehicle";
 import { RootState } from "../../store";
 import { setVehicle } from "../../store/Vehicles";
+import { safeInt } from "../../utils";
 
 const shops = [
   "Legendary Motorsports",
@@ -95,7 +96,8 @@ class VehicleEdit extends React.Component<VehicleEditProps, VehicleEditState> {
     this.setState({
       vehicle: {
         ...this.state.vehicle!!,
-        [name]: type === "number" && value ? parseInt(value) : value,
+        [name]:
+          type === "number" ? safeInt(value, this.state.vehicle![name]) : value,
       },
     });
     this.debouncedSave();

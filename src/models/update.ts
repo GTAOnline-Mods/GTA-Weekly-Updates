@@ -14,6 +14,12 @@ export default interface Update {
   premiumRace?: Race;
   timeTrial?: TimeTrial;
   rcTimeTrial?: TimeTrial;
+  newswire?: RockstarNewswire;
+}
+
+interface RockstarNewswire {
+  url: string;
+  title: string;
 }
 
 export interface BonusActivity {

@@ -4,6 +4,7 @@ import _ from "lodash";
 import React from "react";
 import { Accordion, Button, Card, Col, Form, Spinner } from "react-bootstrap";
 import { Mission } from "../../models/mission";
+import { safeInt } from "../../utils";
 
 interface MissionEditProps {
   mission: Mission;
@@ -42,7 +43,7 @@ function MissionEdit({
 
     const m = {
       ...localMission,
-      [name]: type === "number" && value ? parseInt(value) : value,
+      [name]: type === "number" ? safeInt(value, localMission[name]) : value,
     };
 
     setLocalMission(m);

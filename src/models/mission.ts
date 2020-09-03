@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 
 export interface Mission {
+  [name: string]: any;
   name: string;
   pay?: number;
   minPay?: number;
