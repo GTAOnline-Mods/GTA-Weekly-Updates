@@ -83,7 +83,13 @@ function UpdateItemElement({ item }: UpdateItemCardProps) {
             />
           )}
           {item.url && (
-            <Button variant="link" href={item.url} target="_blank">
+            <Button
+              variant="link"
+              as="a"
+              href={item.url}
+              target="_blank"
+              rel="noreferrer external"
+            >
               <FontAwesomeIcon icon={faExternalLinkAlt} />
             </Button>
           )}
