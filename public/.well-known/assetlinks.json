@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "app.web.gtaonline_cf0ea.twa",
+                   "sha256_cert_fingerprints": ["9B:92:08:FB:88:5F:73:04:FE:E0:FC:3B:2B:82:02:B6:CF:C1:27:8B:42:B7:FC:1D:F9:FD:1B:DA:D6:F7:5A:EA"] }
+    }]
