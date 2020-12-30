@@ -5,11 +5,20 @@ import { Link } from "react-router-dom";
 import Vehicles from "../components/Vehicles";
 import "./index.scss";
 import Missions from "./pages/Missions";
+import Properties from "./pages/Properties";
+import PropertyEdit from "./pages/PropertyEdit";
 import UpdateEdit from "./pages/UpdateEdit";
 import Updates from "./pages/Updates";
 import VehicleEdit from "./pages/VehicleEdit";
 
 function Admin() {
+  React.useEffect(() => {
+    document.body.classList.add("admin");
+    return () => {
+      document.body.classList.remove("admin");
+    };
+  });
+
   return (
     <Container fluid className="p-0 h-100 admin">
       <Row className="h-100 align-items-stretch">
@@ -21,7 +30,10 @@ function Admin() {
             <Nav.Link as={Link} to="/admin/missions" eventKey="missions">
               Missions
             </Nav.Link>
-            <Nav.Link as={Link} to="/admin/updates" eventKey="properties">
+            <Nav.Link as={Link} to="/admin/properties" eventKey="properties">
+              Properties
+            </Nav.Link>
+            <Nav.Link as={Link} to="/admin/updates" eventKey="updates">
               Updates
             </Nav.Link>
           </Nav>
@@ -40,6 +52,11 @@ function Admin() {
             <Route path="/admin/missions" component={Missions} />
             <Route path="/admin/updates/edit/:id?" component={UpdateEdit} />
             <Route path="/admin/updates" component={Updates} />
+            <Route
+              path="/admin/properties/edit/:id?"
+              component={PropertyEdit}
+            />
+            <Route path="/admin/properties" component={Properties} />
           </Switch>
         </Col>
       </Row>

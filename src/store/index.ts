@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { missionsReducer } from "./Missions";
+import { propertiesReducer } from "./Properties";
 import { redditReducer } from "./Reddit";
 import { updatesReducer } from "./Updates";
 import { userReducer } from "./User";
@@ -11,6 +12,7 @@ export const rootReducer = combineReducers({
   user: userReducer,
   vehicles: vehiclesReducer,
   missions: missionsReducer,
+  properties: propertiesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

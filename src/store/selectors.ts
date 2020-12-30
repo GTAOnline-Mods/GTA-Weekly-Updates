@@ -1,7 +1,8 @@
 import { createSelector } from "reselect";
 import { RootState } from ".";
+import { UpdateItem } from "../models/update";
 
-/*
+/**
  * Vehicle selectors
  */
 
@@ -26,6 +27,59 @@ export const getVehiclesAsSearchInputOptions = createSelector(
       label: v.name,
       value: v,
       id: v.item!.id,
+    }))
+);
+
+/**
+ * Property selectors
+ */
+
+const getProperties = (state: RootState) => state.properties.properties;
+
+export const getUpdateProperties = createSelector(
+  [getProperties],
+  (properties) => {
+    const updateProperties: UpdateItem[] = [];
+
+    for (let property of properties) {
+      const { name, docRef, shop, img, url } = property;
+
+      const minPrice = Math.min(...property.locations.map((l) => l.price));
+      const maxPrice = Math.max(...property.locations.map((l) => l.price));
+
+      updateProperties.push({
+        name,
+        minPrice,
+        maxPrice,
+        item: docRef!,
+        shop,
+        img,
+        url,
+      });
+
+      updateProperties.push(
+        ...property.locations.map((location) => ({
+          name: location.name + " " + property.name,
+          price: location.price,
+          item: location.docRef!,
+          shop: property.shop,
+          img: location.img || property.img,
+          url: location.url || property.url,
+        }))
+      );
+    }
+
+    return updateProperties;
+  }
+);
+
+export const getPropertiesAsSearchInputOptions = createSelector(
+  [getUpdateProperties],
+  (properties) =>
+    properties.map((p) => ({
+      label: p.name,
+      value: p,
+      id: p.item!.id,
     }))
 );
 

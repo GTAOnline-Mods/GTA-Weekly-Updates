@@ -9,10 +9,10 @@ export interface Property {
   docRef?: firebase.firestore.DocumentReference;
 }
 
-interface PropertyLocation {
+export interface PropertyLocation {
   name: string;
   img?: string;
-  price?: number;
+  price: number;
   url?: string;
   docRef?: firebase.firestore.DocumentReference;
 }

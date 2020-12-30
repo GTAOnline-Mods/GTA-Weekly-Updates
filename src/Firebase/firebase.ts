@@ -3,6 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/functions";
 import { Mission } from "../models/mission";
+import { Property, PropertyLocation } from "../models/property";
 import Update from "../models/update";
 import { Vehicle } from "../models/vehicle";
 
@@ -110,6 +111,49 @@ class Firebase {
         docRef: doc.ref,
       }
     );
+  };
+
+  getProperties = async () => {
+    const snapshot = await this.db
+      .collection("properties")
+      .orderBy("name")
+      .get();
+
+    const properties = [];
+
+    for (let property of snapshot.docs) {
+      const locations = await property.ref.collection("locations").get();
+      const locationItems = locations.docs.map((l) => ({
+        ...(l.data() as PropertyLocation),
+        docRef: l.ref,
+      }));
+
+      properties.push({
+        ...(property.data() as Property),
+        locations: locationItems,
+        docRef: property.ref,
+      });
+    }
+
+    return properties;
+  };
+
+  getProperty = async (id: string) => {
+    const property = await this.db.collection("properties").doc(id).get();
+
+    if (!property.exists) return false;
+
+    const locations = await property.ref.collection("locations").get();
+    const locationItems = locations.docs.map((l) => ({
+      ...(l.data() as PropertyLocation),
+      docRef: l.ref,
+    }));
+
+    return {
+      ...(property.data() as Property),
+      locations: locationItems,
+      docRef: property.ref,
+    };
   };
 
   getMissions = async () => {
