@@ -75,3 +75,6 @@ build/
 src/helpers/config.ts
 src/Reddit/index.ts
 functions/reddit.js
+data/car_data - car_data.csv
+data/gtaonline-cf0ea-firebase-adminsdk-m40wm-c97b6484bf.json
+data/names.txt
