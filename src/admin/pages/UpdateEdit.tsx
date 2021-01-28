@@ -422,6 +422,7 @@ class UpdateEdit extends React.Component<UpdateEditProps, UpdateEditState> {
             );
         }
       } else {
+        console.warn("No Reddit client found, uploading changes to Firebase.");
         updateDoc();
       }
     }
