@@ -96,12 +96,12 @@ export default class UpdatePost {
     }
     if (this.update.timeTrial) {
       groups.push(
-        `**Time Trial**\n\n - [${this.update.timeTrial.name}](${this.update.timeTrial.url})`
+        `**Time Trial**\n\n - [${this.update.timeTrial.name}](${this.update.timeTrial.url}), Par Time ${this.update.timeTrial.parTime}`
       );
     }
     if (this.update.rcTimeTrial) {
       groups.push(
-        `**RC Bandito Time Trial**\n\n - [${this.update.rcTimeTrial.name}](${this.update.rcTimeTrial.url})`
+        `**RC Bandito Time Trial**\n\n - [${this.update.rcTimeTrial.name}](${this.update.rcTimeTrial.url}), Par Time ${this.update.rcTimeTrial.parTime}`
       );
     }
     if (this.update.premiumRace) {
