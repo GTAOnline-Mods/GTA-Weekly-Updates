@@ -1,4 +1,4 @@
-import Update, { SaleItem } from "./update";
+import Update, { SaleItem, UpdateItem } from "./update";
 
 export default class UpdatePost {
   private postString: string = "";
@@ -30,6 +30,22 @@ export default class UpdatePost {
       : ` - ${item.amount}% off ${item.name}${priceString}`;
   };
 
+  getNewString = (item: UpdateItem) => {
+    let itemString = ` - ${item.name}`;
+
+    if (item.price && item.shop) {
+      itemString += ` (GTA$ ${item.price.toLocaleString("en-US")} on ${item.shop})`;
+    } else if (item.price) {
+      itemString += ` (GTA$ ${item.price.toLocaleString("en-US")})`;
+    }
+
+    if (item.url) {
+      itemString += ` [↗](${item.url})`;
+    }
+
+    return itemString;
+  }
+
   build = () => {
     const groups: string[] = [];
 
@@ -37,9 +53,7 @@ export default class UpdatePost {
       groups.push(
         "**New Content**\n\n" +
           this.update.new
-            .map((item) =>
-              item.url ? ` - ${item.name} [↗](${item.url})` : ` - ${item.name}`
-            )
+            .map(this.getNewString)
             .join("\n\n")
       );
     }
